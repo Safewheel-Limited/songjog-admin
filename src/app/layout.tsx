@@ -10,7 +10,7 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = generateMetadata({ title: 'Signup' }, { withSuffix: true });
+export const metadata = generateMetadata({ title: 'Profile' }, { withSuffix: true });
 
 export default function RootLayout({
     children,

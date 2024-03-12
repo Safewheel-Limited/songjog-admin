@@ -17,7 +17,6 @@ export const revalidate = 5;
 
 const Login = () => {
     const { data, error } = useSuspenseQuery(GET_POKEMONS);
-
     const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
         console.log("data", data);
         // try { } catch (err: any) { }
