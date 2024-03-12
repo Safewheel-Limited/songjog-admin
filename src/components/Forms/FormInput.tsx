@@ -38,7 +38,7 @@ const FormInput = ({
     const errorMessage = getErrorMessageByPropertyName(errors, name);
 
     return (
-        <>
+        <div>
             {required ? (
                 <span
                     style={{
@@ -48,7 +48,7 @@ const FormInput = ({
                     *
                 </span>
             ) : null}
-            {label ? label : null}
+            {label ? <span>{label}</span> : null}
             <Controller
                 control={control}
                 name={name}
@@ -73,7 +73,7 @@ const FormInput = ({
                 }
             />
             <small style={{ color: "red" }}>{errorMessage}</small>
-        </>
+        </div>
     );
 };
 
