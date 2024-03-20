@@ -1,0 +1,159 @@
+type User {
+  id: Float!
+  uid: String!
+  fullName: String!
+  phone: String!
+  email: String
+  password: String!
+  gender: String!
+  type: String!
+  baseRole: String
+  isDisabled: Boolean
+  deletedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+# A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+scalar DateTime
+
+type SignResponse {
+  accessToken: String
+  refreshToken: String
+  user: User
+}
+
+type Pagination {
+  page: Int!
+  limit: Int!
+  total: Int!
+  totalPages: Int!
+  hasNextPage: Boolean!
+}
+
+type Role {
+  id: Float!
+  name: String!
+  permission: [Permission!]!
+  user: [User!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Permission {
+  id: Int!
+  name: String!
+  role: [Role!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PermissionResponse {
+  message: String!
+  status: Int!
+  pagination: Pagination!
+  data: [Permission!]!
+}
+
+type RoleResponse {
+  message: String!
+  status: Int!
+  pagination: Pagination!
+  data: [Role!]!
+}
+
+type Query {
+  test: String!
+  permissionGetAll(
+    paginationQuery: GlobalPagination!
+    filterQuery: PermissionFilter!
+  ): PermissionResponse!
+  permissionGet(id: Int!): Permission!
+  roleAccessGetAll(
+    paginationQuery: GlobalPagination!
+    filterQuery: RoleFilter!
+  ): RoleResponse!
+  roleAccessGet(id: Int!): Role!
+}
+
+input GlobalPagination {
+  page: Int = 1
+  limit: Int = 10
+}
+
+input PermissionFilter {
+  id: Float
+  name: String
+}
+
+input RoleFilter {
+  id: Float
+  name: String
+}
+
+type Mutation {
+  signUp(signUpPayload: SignupInput!): SignResponse!
+  adminSignIn(signInPayload: SignInInput!): SignResponse!
+  signIn(signInPayload: SignInInput!): SignResponse!
+  grantToken(refreshToken: String!): String!
+  permissionCreate(createPermissionInput: CreatePermissionInput!): Permission!
+  permissionUpdate(updatePermissionInput: UpdatePermissionInput!): Permission!
+  permissionDelete(id: Int!): Permission!
+  assignRoleToUser(userId: String!, roleId: Int!): User!
+  unAssignRoleToUser(userId: String!): User!
+  roleAccessCreate(createRoleAccessInput: CreateRoleInput!): Role!
+  roleAccessUpdate(updateRoleAccessInput: UpdateRoleInput!): Role!
+  roleAccessDelete(id: Int!): Role!
+}
+
+input SignupInput {
+  fullName: String!
+  gender: GenderEnum
+  phone: String!
+  email: String
+  password: String!
+  firebaseToken: FirebaseTokenInput
+}
+
+# MALE , FEMALE , NOT_SAY
+enum GenderEnum {
+  MALE
+  FEMALE
+  NOT_SAY
+}
+
+input FirebaseTokenInput {
+  token: String!
+  platform: PlatformEnum!
+}
+
+# WEB , APP
+enum PlatformEnum {
+  WEB
+  APP
+}
+
+input SignInInput {
+  phoneOrEmail: String!
+  password: String!
+}
+
+input CreatePermissionInput {
+  name: String!
+}
+
+input UpdatePermissionInput {
+  name: String
+  id: Int!
+}
+
+input CreateRoleInput {
+  name: String!
+  permissionIds: [Int!]
+}
+
+input UpdateRoleInput {
+  name: String
+  permissionIds: [Int!]
+  id: Int!
+}

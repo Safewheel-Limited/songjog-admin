@@ -2,8 +2,8 @@
 import type { Metadata } from "next";
 
 // import from internal
-import { GenerateMetadataOptions } from "../../types";
 import { app } from "@/common/constants";
+import { GenerateMetadataOptions } from "../types";
 
 export const generateMetadata = (
   metadata?: Partial<Metadata>,

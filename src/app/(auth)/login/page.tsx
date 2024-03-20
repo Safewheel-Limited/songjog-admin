@@ -1,27 +1,51 @@
 "use client";
 
 // external imports
-import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Button, Card, Flex, message } from "antd";
 import { SubmitHandler } from "react-hook-form";
+import { useMutation } from "@apollo/client";
+import { useEffect } from "react";
 
 // internal imports
-import { GET_POKEMONS } from './graphql';
-import Form from "@/components/Forms/Form";
-import { FormValues } from "./interfaces";
-import { loginSchema } from "./validation";
-import { Button, Card, Flex } from "antd";
 import FormInput from "@/components/Forms/FormInput";
+import { isLoggedIn } from "@/common/services";
+import { storeCookies } from "@/common/utils";
+import { useRouter } from "next/navigation";
+import Form from "@/components/Forms/Form";
+import { loginSchema } from "./validation";
+import { ADMIN_LOGIN } from "./graphql";
+import { FormValues } from "./types";
 
 export const revalidate = 5;
 
 const Login = () => {
-    const { data, error } = useSuspenseQuery(GET_POKEMONS);
+    const [adminLogin, { loading, error }] = useMutation(ADMIN_LOGIN);
+    const router = useRouter();
     const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
-        console.log("data", data);
-        // try { } catch (err: any) { }
+        try {
+            const result = await adminLogin({
+                variables: {
+                    input: {
+                        phoneOrEmail: data.phoneOrEmail,
+                        password: data.password,
+                    }
+                }
+            })
+            if (result?.data?.adminSignIn?.accessToken) {
+                storeCookies(result?.data?.adminSignIn?.accessToken)
+                router.push("/profile");
+                message.success("User logged in successfully!");
+            }
+        } catch (error) {
+            // console.log("error", error)
+        }
     };
-
+    useEffect(() => {
+        if (isLoggedIn()) {
+            router.push("/profile")
+        }
+    }, [router])
     return (
         <div
             style={{
@@ -44,10 +68,11 @@ const Login = () => {
                     <Card style={{ width: 400 }}>
                         {/* <img src={Logo} alt="" style={{ width: "120px" }} /> */}
                         <Flex vertical gap="large">
-                            <FormInput name="username" label="Username" required placeholder="Enter User name" type="text" />
+                            <FormInput name="phoneOrEmail" label="Phone Or Email" required placeholder="Enter Your Phone or Email" type="text" />
                             <FormInput name="password" label="Password" required placeholder="Enter your password" type="password" />
                             <Button
-                                //  loading={loading} disabled={loading}
+                                loading={loading}
+                                disabled={loading}
                                 type="primary"
                                 htmlType="submit"
                                 block

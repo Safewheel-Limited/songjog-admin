@@ -1,8 +1,8 @@
-import React from 'react'
+import Loader from "@/components/ui/Loader"
 
 const loading = () => {
     return (
-        <div>loading...</div>
+        <Loader />
     )
 }
 

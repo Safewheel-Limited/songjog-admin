@@ -36,7 +36,6 @@ const FormInput = ({
     } = useFormContext();
 
     const errorMessage = getErrorMessageByPropertyName(errors, name);
-
     return (
         <div>
             {required ? (

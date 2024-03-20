@@ -1,2 +1,2 @@
-export * from "./apollo-client";
-export * from "./metadata";
+export * from "./apollo-client.lib";
+export * from "./metadata.lib";
