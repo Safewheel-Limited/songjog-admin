@@ -8,6 +8,7 @@ import { useMutation } from "@apollo/client";
 import { useEffect } from "react";
 
 // internal imports
+import { authKey, refreshToken } from "@/common/constants";
 import FormInput from "@/components/Forms/FormInput";
 import { isLoggedIn } from "@/common/services";
 import { storeCookies } from "@/common/utils";
@@ -17,7 +18,7 @@ import { loginSchema } from "./validation";
 import { ADMIN_LOGIN } from "./graphql";
 import { FormValues } from "./types";
 
-export const revalidate = 5;
+// export const revalidate = 5;
 
 const Login = () => {
     const [adminLogin, { loading, error }] = useMutation(ADMIN_LOGIN);
@@ -33,7 +34,8 @@ const Login = () => {
                 }
             })
             if (result?.data?.adminSignIn?.accessToken) {
-                storeCookies(result?.data?.adminSignIn?.accessToken)
+                storeCookies(authKey, result?.data?.adminSignIn?.accessToken);;
+                storeCookies(refreshToken, result?.data?.adminSignIn?.refreshToken)
                 router.push("/profile");
                 message.success("User logged in successfully!");
             }

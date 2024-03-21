@@ -10,21 +10,8 @@ import {
     NextSSRApolloClient,
     SSRMultipartLink,
 } from "@apollo/experimental-nextjs-app-support/ssr";
-import { onError } from "@apollo/client/link/error";
 
 function makeClient() {
-
-    // error handling  
-    const errorLink = onError(({ graphQLErrors, networkError, operation, response }) => {
-        if (graphQLErrors)
-            graphQLErrors.forEach(({ message, locations, path }) =>
-                console.log(
-                    `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-                )
-            );
-        if (networkError) console.error(`[Network error]: ${networkError}`);
-    });
-
     const httpLink = new HttpLink({
         uri: process.env.NEXT_PUBLIC_BASE_API_URL as string,
     });
@@ -48,10 +35,9 @@ function makeClient() {
                     new SSRMultipartLink({
                         stripDefer: true,
                     }),
-                    errorLink,
                     authLink.concat(httpLink),
                 ])
-                : errorLink.concat(authLink.concat(httpLink)),
+                : authLink.concat(httpLink),
     });
 }
 

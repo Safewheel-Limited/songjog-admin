@@ -1,4 +1,4 @@
-import { authKey } from "../constants";
+import { authKey, refreshToken } from "../constants";
 import { decodedToken, setToLocalStorage } from "../utils";
 import Cookies from "universal-cookie";
 
@@ -20,6 +20,6 @@ export const getUserInfo = () => {
 
 export const isLoggedIn = () => {
   const cookies = new Cookies();
-  const authToken = cookies.get(authKey);
+  const authToken = cookies.get(refreshToken);
   return !!authToken;
 };

@@ -1,10 +1,10 @@
 import Cookies from "universal-cookie";
-import { authKey } from "../constants";
+import { authKey, refreshToken } from "../constants";
 import { tokenExpiresTime } from ".";
 
 const cookies = new Cookies();
-export const storeCookies = (token: string) => {
-  cookies.set(authKey, token, {
+export const storeCookies = (cookieName: string, token: string) => {
+  cookies.set(cookieName, token, {
     expires: tokenExpiresTime(token),
   });
 };
@@ -21,8 +21,10 @@ export const removeCookies = (token: string) => {
 };
 
 export const userLogout = () => {
-  cookies.remove(authKey, {
+  const cookieOptions = {
     path: "/",
     domain: "localhost",
-  });
+  };
+  cookies.remove(authKey, cookieOptions);
+  cookies.remove(refreshToken, cookieOptions);
 };

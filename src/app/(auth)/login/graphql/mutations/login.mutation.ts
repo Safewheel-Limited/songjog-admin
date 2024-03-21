@@ -13,3 +13,26 @@ export const ADMIN_LOGIN = gql`
     }
   }
 `;
+
+export const GET_ACCESS_TOKEN = gql`
+  mutation adminLogin($token: String!) {
+    grantToken(refreshToken: $token)
+  }
+`;
+
+export const GET_ALL_PERMISSIONS = gql`
+  query Permissions {
+    permissionGetAll(paginationQuery: {}, filterQuery: {}) {
+      message
+      data {
+        name
+        id
+        role {
+          name
+        }
+        updatedAt
+        createdAt
+      }
+    }
+  }
+`;
