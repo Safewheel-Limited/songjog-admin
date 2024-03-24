@@ -62,6 +62,88 @@ type RoleResponse {
   data: [Role!]!
 }
 
+type GalleryEntity {
+  id: Float!
+  name: String!
+  fileUrl: String!
+  mobileFileUrl: String!
+  desktopFileUrl: String!
+  fileType: FileType!
+  carePackage: [CarePackageEntity!]!
+  privacy: Boolean!
+  visible: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+# File Type
+enum FileType {
+  # Image
+  IMAGE
+
+  # Video
+  VIDEO
+
+  # Audio
+  AUDIO
+
+  # Document
+  DOCUMENT
+}
+
+type CarePackageEntity {
+  id: Float!
+  title: String!
+  description: String
+  thumbnails: [GalleryEntity!]
+  level: Float!
+  price: Float!
+  basis: BasisType!
+  carePackageTime: [CarePackageTimeEntity!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+# Basis Type
+enum BasisType {
+  # Hourly
+  HOURLY
+
+  # Daily
+  DAILY
+
+  # Weekly
+  WEEKLY
+
+  # Monthly
+  MONTHLY
+
+  # Custom
+  CUSTOM
+}
+
+type CarePackageTimeEntity {
+  id: Float!
+  title: String!
+  carePackage: [CarePackageEntity!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type CarePackageTimeResponse {
+  message: String!
+  status: Int!
+  pagination: Pagination!
+  data: [CarePackageTimeEntity!]!
+}
+
+type CarePackageResponse {
+  message: String!
+  status: Float!
+  pagination: Pagination!
+  data: [CarePackageEntity!]!
+}
+
 type Query {
   test: String!
   permissionGetAll(
@@ -74,6 +156,16 @@ type Query {
     filterQuery: RoleFilter!
   ): RoleResponse!
   roleAccessGet(id: Int!): Role!
+  carePackageTimeGet(id: Float!): CarePackageTimeEntity!
+  carePackageTimeGetAll(
+    paginationQuery: GlobalPagination!
+    filterQuery: CarePackageTimeFilter!
+  ): CarePackageTimeResponse!
+  carePackageGet(id: Float!): CarePackageEntity!
+  carePackageGetAll(
+    paginationQuery: GlobalPagination!
+    filterQuery: CarePackageFilter!
+  ): CarePackageResponse!
 }
 
 input GlobalPagination {
@@ -91,6 +183,19 @@ input RoleFilter {
   name: String
 }
 
+input CarePackageTimeFilter {
+  id: Float
+  title: String
+}
+
+input CarePackageFilter {
+  id: Float!
+  title: String!
+  level: Float!
+  price: Float!
+  basis: BasisType!
+}
+
 type Mutation {
   signUp(signUpPayload: SignupInput!): SignResponse!
   adminSignIn(signInPayload: SignInInput!): SignResponse!
@@ -104,6 +209,18 @@ type Mutation {
   roleAccessCreate(createRoleAccessInput: CreateRoleInput!): Role!
   roleAccessUpdate(updateRoleAccessInput: UpdateRoleInput!): Role!
   roleAccessDelete(id: Int!): Role!
+  carePackageTimeCreate(
+    carePackageTimeInput: CarePackageTimeInput!
+  ): CarePackageTimeEntity!
+  carePackageTimeUpdate(
+    updateCarePackageTimeInput: UpdateCarePackageTimeInput!
+  ): CarePackageTimeEntity!
+  carePackageTimeDelete(id: Float!): CarePackageTimeEntity!
+  carePackageCreate(carePackageInput: CarePackageInput!): CarePackageEntity!
+  carePackageUpdate(
+    updateCarePackageInput: UpdateCarePackageInput!
+  ): CarePackageEntity!
+  carePackageDelete(id: Float!): CarePackageEntity!
 }
 
 input SignupInput {
@@ -156,4 +273,34 @@ input UpdateRoleInput {
   name: String
   permissionIds: [Int!]
   id: Int!
+}
+
+input CarePackageTimeInput {
+  title: String!
+}
+
+input UpdateCarePackageTimeInput {
+  title: String
+  id: Float!
+}
+
+input CarePackageInput {
+  title: String!
+  description: String
+  level: Float
+  price: Float!
+  basis: BasisType
+  thumbnails: [Float!]
+  carePackageTime: [Float!]
+}
+
+input UpdateCarePackageInput {
+  title: String
+  description: String
+  level: Float
+  price: Float
+  basis: BasisType
+  thumbnails: [Float!]
+  carePackageTime: [Float!]
+  id: Float!
 }

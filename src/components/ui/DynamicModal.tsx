@@ -3,12 +3,14 @@ import { Modal } from "antd";
 
 interface IModal {
     isOpen: boolean;
+    confirmLoading?: boolean;
     closeModal: () => void;
     title: string | ReactNode;
     children: ReactElement;
     handleOk?: () => void;
     showCancelButton?: boolean;
     showOkButton?: boolean;
+    footer?: string | ReactNode;
 }
 
 const DynamicModal = ({
@@ -17,6 +19,8 @@ const DynamicModal = ({
     title,
     children,
     handleOk,
+    confirmLoading = false,
+    footer,
     showCancelButton = true,
     showOkButton = true,
 }: IModal) => {
@@ -25,7 +29,9 @@ const DynamicModal = ({
             title={title}
             open={isOpen}
             onOk={handleOk}
+            confirmLoading={confirmLoading}
             onCancel={closeModal}
+            footer={footer}
             cancelButtonProps={{
                 style: { display: showCancelButton ? "inline" : "none" },
             }}

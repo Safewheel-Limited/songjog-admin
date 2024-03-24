@@ -19,20 +19,3 @@ export const GET_ACCESS_TOKEN = gql`
     grantToken(refreshToken: $token)
   }
 `;
-
-export const GET_ALL_PERMISSIONS = gql`
-  query Permissions {
-    permissionGetAll(paginationQuery: {}, filterQuery: {}) {
-      message
-      data {
-        name
-        id
-        role {
-          name
-        }
-        updatedAt
-        createdAt
-      }
-    }
-  }
-`;
