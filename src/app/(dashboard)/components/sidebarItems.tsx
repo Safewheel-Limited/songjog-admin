@@ -21,6 +21,21 @@ export const sidebarItems = (role: string) => {
                 },
             ],
         },
+        {
+            label: "Role management",
+            key: "role-management",
+            icon: <ProfileOutlined />,
+            children: [
+                {
+                    label: <Link href={`/permission`}>Permission</Link>,
+                    key: `permission`,
+                },
+                // {
+                //     label: <Link href={`/${role}/change-password`}>All Role</Link>,
+                //     key: `/${role}/change-password`,
+                // },
+            ],
+        },
     ];
 
     return defaultSidebarItems;
