@@ -11,7 +11,7 @@ import PermissionAccessHolderModal from './_components/permission-access-holder.
 import PermissionHeader from './_components/permission-header';
 import AddPermissionModal from './_components/add-permission.modal';
 import { lastWhitSpaceTrim } from '@/common/utils';
-import { searchPermisionType } from './types';
+import { searchPermisionType } from '../types';
 
 const AllPermissions = () => {
     const [page, setPage] = useState<number>(1);

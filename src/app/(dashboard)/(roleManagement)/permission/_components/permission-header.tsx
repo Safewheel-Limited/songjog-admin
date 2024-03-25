@@ -4,7 +4,7 @@ import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { KeyEnum, MODAL_ENUMS } from "@/common/constants";
 import { useModal } from "@/common/store";
 import _ from "lodash";
-import { searchPermisionType } from "../types";
+import { searchPermisionType } from "../../types";
 
 interface PropsType {
     setSearch: (prev: searchPermisionType) => void

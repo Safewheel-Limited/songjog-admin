@@ -14,6 +14,6 @@ export enum MODAL_ENUMS {
   ROLE_ACCESS_HOLDER_MODAL = "role_access_holder",
   ADD_NEW_ADDMINISTRATOR = "add_new_addministrator",
 
-  // Delivery Enums
-  ADD_DELIVERY_CHARGE = "add_delivery_charge",
+  // Addministrators enums
+  SET_INITIAL_PASSWORD = "set_initial_password",
 }

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Actions, Store } from "../permission/types";
+import { Actions, Store } from "../types";
 
 export const useRoleAndPermissionState = create<Store & Actions>(
   (set): Store & Actions => ({

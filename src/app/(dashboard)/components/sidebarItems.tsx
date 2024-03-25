@@ -27,6 +27,10 @@ export const sidebarItems = (role: string) => {
             icon: <ProfileOutlined />,
             children: [
                 {
+                    label: <Link href="/administrators">Administrators</Link>,
+                    key: `administrators`,
+                },
+                {
                     label: <Link href="/permission">Permission</Link>,
                     key: `permission`,
                 },
