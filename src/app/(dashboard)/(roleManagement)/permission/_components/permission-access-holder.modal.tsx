@@ -1,7 +1,7 @@
 import { Badge, List } from "antd";
 
 import DynamicModal from "@/components/ui/DynamicModal";
-import { useRoleAndPermissionState } from "../store";
+import { useRoleAndPermissionState } from "../../store";
 import { useModal } from "@/common/store";
 import { MODAL_ENUMS } from "@/common/constants";
 

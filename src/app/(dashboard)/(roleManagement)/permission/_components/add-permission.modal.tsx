@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { Button, Input, Space, message } from "antd";
+import { Button, Flex, Input, Space, message } from "antd";
 
 import { useModal } from "@/common/store";
 import { CREATE_PERMISSION } from "../graphql/permission.mutation";
@@ -49,12 +49,12 @@ const AddPermissionModal = () => {
                 confirmLoading={loading}
                 showCancelButton
                 footer={
-                    <div>
+                    <Flex gap="15px" justify="flex-end">
                         <Button onClick={() => setModal("")} disabled={loading}>Cancel</Button>
                         <Button type="primary" onClick={handleAddPermission} loading={loading}>
                             Add
                         </Button>
-                    </div>
+                    </Flex>
                 }
             >
                 <Space direction="vertical" style={{ width: "100%" }}>

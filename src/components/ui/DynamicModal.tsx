@@ -1,20 +1,22 @@
-import { ReactElement, ReactNode } from "react";
+import { JSXElementConstructor, ReactElement, ReactNode } from "react";
 import { Modal } from "antd";
 
 interface IModal {
     isOpen: boolean;
+    width?: number;
     confirmLoading?: boolean;
     closeModal: () => void;
     title: string | ReactNode;
-    children: ReactElement;
+    children: ReactElement | ReactElement<any, string | JSXElementConstructor<any>>;
     handleOk?: () => void;
     showCancelButton?: boolean;
     showOkButton?: boolean;
-    footer?: string | ReactNode;
+    footer?: boolean | ReactNode;
 }
 
 const DynamicModal = ({
     isOpen,
+    width,
     closeModal,
     title,
     children,
@@ -28,6 +30,7 @@ const DynamicModal = ({
         <Modal
             title={title}
             open={isOpen}
+            width={width}
             onOk={handleOk}
             confirmLoading={confirmLoading}
             onCancel={closeModal}
@@ -41,5 +44,6 @@ const DynamicModal = ({
         </Modal>
     );
 };
+
 
 export default DynamicModal;

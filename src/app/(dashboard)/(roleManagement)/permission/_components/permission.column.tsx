@@ -8,7 +8,7 @@ import { ColumnsType } from "antd/es/table";
 import { DELETE_PERMISSION } from "../graphql/permission.mutation";
 import { PermissionType } from "../interface/permission.interface";
 import { KeyEnum, MODAL_ENUMS } from "@/common/constants";
-import { useRoleAndPermissionState } from "../store";
+import { useRoleAndPermissionState } from "../../store";
 import { useModal } from "@/common/store";
 
 const ColumnRenderer = () => {

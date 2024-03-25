@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_PERMISSION } from "../graphql/permission.mutation";
 import { GET_PERMISSION_BY_ID } from "../graphql/permission.query";
 import DynamicModal from "@/components/ui/DynamicModal";
-import { useRoleAndPermissionState } from "../store";
+import { useRoleAndPermissionState } from "../../store";
 import { MODAL_ENUMS } from "@/common/constants";
 import { useModal } from "@/common/store";
 

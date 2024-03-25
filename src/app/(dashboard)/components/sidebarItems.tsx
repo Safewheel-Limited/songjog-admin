@@ -27,8 +27,12 @@ export const sidebarItems = (role: string) => {
             icon: <ProfileOutlined />,
             children: [
                 {
-                    label: <Link href={`/permission`}>Permission</Link>,
+                    label: <Link href="/permission">Permission</Link>,
                     key: `permission`,
+                },
+                {
+                    label: <Link href="/role">All Roles</Link>,
+                    key: `role`,
                 },
                 // {
                 //     label: <Link href={`/${role}/change-password`}>All Role</Link>,
