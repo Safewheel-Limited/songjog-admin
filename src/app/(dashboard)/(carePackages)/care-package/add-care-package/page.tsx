@@ -5,20 +5,20 @@ import Title from "antd/es/typography/Title";
 import { useMutation } from "@apollo/client";
 import Card from "antd/es/card/Card";
 import { Button, Flex } from "antd";
-import React from "react";
 
+import useGetMultipleDataWithDynamicQuery from "../../hooks/useGetMultipleDataWithDynamicQuery.hook";
+import { CARE_PACKAGE_TIME_GET_ALL, CREATE_CARE_PACKAGE } from "../../graphql";
 import { BasisItems } from "../../_constants/select-basis-item.constant";
-import DynamicUploadImage from "@/components/ui/DynamicImageUpload";
 import FormSelectField from "@/components/Forms/FormSelectField";
-import FormDatePicker from "@/components/Forms/FormDatePicker";
+import { convertDataToFormSelectOptions } from "@/common/utils";
 import FormTextArea from "@/components/Forms/FormTextArea";
 import { CreateCarePackageFormValues } from "../../types";
 import FormInput from "@/components/Forms/FormInput";
-import { CREATE_CARE_PACKAGE } from "../../graphql";
 import Form from "@/components/Forms/Form";
 
 const AddCarePacakge = () => {
-    const [carePackageCreate, result] = useMutation(CREATE_CARE_PACKAGE)
+    const { data } = useGetMultipleDataWithDynamicQuery({ query: CARE_PACKAGE_TIME_GET_ALL })
+    const [carePackageCreate, result] = useMutation(CREATE_CARE_PACKAGE);
     const onSubmit: SubmitHandler<CreateCarePackageFormValues> = async (data: any) => {
         try {
             carePackageCreate({
@@ -30,6 +30,8 @@ const AddCarePacakge = () => {
             // console.log("error", error)
         }
     };
+
+    console.log("data", data);
 
     return (
         <Card>
@@ -70,12 +72,14 @@ const AddCarePacakge = () => {
                         label="Select Basis"
                         required
                     />
-                    <DynamicUploadImage name="thumbnails" multiple={true} />
-                    <FormDatePicker
-                        name="carePackageTime"
-                        label="Select care Package time"
-                    />
 
+                    <FormSelectField
+                        name="carePackageTime"
+                        options={BasisItems}
+                        placeholder="Select Care Package Time"
+                        label="Select Care Package Time"
+                        required
+                    />
                     <Button
                         // loading={loading}
                         // disabled={loading}
