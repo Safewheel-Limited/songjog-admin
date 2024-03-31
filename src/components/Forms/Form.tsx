@@ -32,7 +32,7 @@ const Form = ({
         reset();
     };
 
-    // useEffect(() => reset(defaultValues), [defaultValues, reset, methods]);
+    useEffect(() => reset(defaultValues), [defaultValues, reset, methods]);
 
     return (
         <FormProvider {...methods}>

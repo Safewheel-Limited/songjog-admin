@@ -10,6 +10,7 @@ export type SelectOptions = {
 
 type SelectFieldProps = {
     options: SelectOptions[];
+    required?: boolean;
     name: string;
     size?: "large" | "small";
     value?: string | string[] | undefined;
@@ -23,6 +24,7 @@ const FormSelectField = ({
     name,
     size = "large",
     value,
+    required = false,
     placeholder = "select",
     options,
     label,
@@ -32,8 +34,17 @@ const FormSelectField = ({
     const { control } = useFormContext();
 
     return (
-        <>
-            {label ? label : null}
+        <div>
+            {required ? (
+                <span
+                    style={{
+                        color: "red",
+                    }}
+                >
+                    *
+                </span>
+            ) : null}
+            {label ? <span style={{ marginBottom: "5px" }}>{label}</span> : null}
             <Controller
                 control={control}
                 name={name}
@@ -48,7 +59,7 @@ const FormSelectField = ({
                     />
                 )}
             />
-        </>
+        </div>
     );
 };
 

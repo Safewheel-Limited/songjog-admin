@@ -44,6 +44,25 @@ export const sidebarItems = (role: string) => {
                 // },
             ],
         },
+        {
+            label: "Care Package",
+            key: "care-package",
+            icon: <ProfileOutlined />,
+            children: [
+                {
+                    label: <Link href="/care-package/add-care-package">Add Care Package </Link>,
+                    key: `add-care-package`,
+                },
+                {
+                    label: <Link href="/package-time/create-package-time">Create Package Time</Link>,
+                    key: `create-package-time`,
+                },
+                {
+                    label: <Link href="/package-time/package-time-lists">All Package Time</Link>,
+                    key: `package-time-lists`,
+                },
+            ],
+        },
     ];
 
     return defaultSidebarItems;
