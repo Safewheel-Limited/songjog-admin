@@ -3,8 +3,8 @@
 import { SubmitHandler } from "react-hook-form";
 import Title from "antd/es/typography/Title";
 import { useMutation } from "@apollo/client";
+import { Button, Flex, message } from "antd";
 import Card from "antd/es/card/Card";
-import { Button, Flex } from "antd";
 
 import useGetMultipleDataWithDynamicQuery from "../../hooks/useGetMultipleDataWithDynamicQuery.hook";
 import { CARE_PACKAGE_TIME_GET_ALL, CREATE_CARE_PACKAGE } from "../../graphql";
@@ -17,21 +17,25 @@ import FormInput from "@/components/Forms/FormInput";
 import Form from "@/components/Forms/Form";
 
 const AddCarePacakge = () => {
+
     const { data } = useGetMultipleDataWithDynamicQuery({ query: CARE_PACKAGE_TIME_GET_ALL })
-    const [carePackageCreate, result] = useMutation(CREATE_CARE_PACKAGE);
+    const [carePackageCreate] = useMutation(CREATE_CARE_PACKAGE);
     const onSubmit: SubmitHandler<CreateCarePackageFormValues> = async (data: any) => {
         try {
-            carePackageCreate({
+            data.thumbnails = [1, 2];
+            data.price = Number(data.price)
+            const res = await carePackageCreate({
                 variables: {
                     input: data
                 }
             })
+            if (res.data) {
+                message.success("Care package created successfully")
+            }
         } catch (error) {
-            // console.log("error", error)
+            message.error("Something want wrong. please try again!")
         }
     };
-
-    console.log("data", data);
 
     return (
         <Card>
@@ -59,7 +63,7 @@ const AddCarePacakge = () => {
                         type="text"
                     />
                     <FormInput
-                        name="Price"
+                        name="price"
                         label="Price"
                         placeholder="Write your Price"
                         type="number"
@@ -74,8 +78,9 @@ const AddCarePacakge = () => {
                     />
 
                     <FormSelectField
+                        mode="multiple"
                         name="carePackageTime"
-                        options={BasisItems}
+                        options={convertDataToFormSelectOptions(data?.carePackageTimeGetAll.data)}
                         placeholder="Select Care Package Time"
                         label="Select Care Package Time"
                         required

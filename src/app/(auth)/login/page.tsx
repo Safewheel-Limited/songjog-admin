@@ -4,7 +4,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Card, Flex, message } from "antd";
 import { SubmitHandler } from "react-hook-form";
-import { useMutation } from "@apollo/client";
+import { ApolloError, useMutation } from "@apollo/client";
 import { useEffect } from "react";
 
 // internal imports
@@ -23,6 +23,20 @@ import { FormValues } from "./types";
 const Login = () => {
     const [adminLogin, { loading, error }] = useMutation(ADMIN_LOGIN);
     const router = useRouter();
+
+    useEffect(() => {
+        if (isLoggedIn()) {
+            router.push("/profile")
+        }
+    }, [router])
+
+    useEffect(() => {
+        if (error) {
+            message.error(error.message);
+        }
+    }, [error])
+
+
     const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
         try {
             const result = await adminLogin({
@@ -43,11 +57,7 @@ const Login = () => {
             // console.log("error", error)
         }
     };
-    useEffect(() => {
-        if (isLoggedIn()) {
-            router.push("/profile")
-        }
-    }, [router])
+
     return (
         <div
             style={{

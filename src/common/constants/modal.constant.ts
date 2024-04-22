@@ -16,4 +16,7 @@ export enum MODAL_ENUMS {
 
   // Addministrators enums
   SET_INITIAL_PASSWORD = "set_initial_password",
+
+  // Care package time enums
+  UPDATE_CARE_PACKAGE = "update_care_package",
 }

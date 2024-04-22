@@ -2,15 +2,18 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, message } from "antd";
 
 import { DELETE_CARE_PACKAGE_TIME } from "../../graphql";
-import { KeyEnum } from "@/common/constants";
+import { KeyEnum, MODAL_ENUMS } from "@/common/constants";
 import { useMutation } from "@apollo/client";
+import { useSavePackageTimeId } from "../_store";
+import { useModal } from "@/common/store";
 
 const PackageListsColumnRenderer = () => {
 
     const [carePackageTimeDelete, { loading }] = useMutation(DELETE_CARE_PACKAGE_TIME, {
         refetchQueries: ["carePackageTimeGetAll"],
     });
-
+    const { setPackageTimeId } = useSavePackageTimeId();
+    const { setModal } = useModal();
     const handleDeletePackageTime = (id: string | number) => {
         carePackageTimeDelete({
             variables: {
@@ -26,7 +29,8 @@ const PackageListsColumnRenderer = () => {
     }
 
     const handleUpdatePackageTime = (id: string) => {
-
+        setPackageTimeId(id)
+        setModal(MODAL_ENUMS.UPDATE_CARE_PACKAGE)
     }
 
     const columns = [
@@ -97,7 +101,6 @@ const PackageListsColumnRenderer = () => {
         },
 
     ];
-
     return columns;
 };
 

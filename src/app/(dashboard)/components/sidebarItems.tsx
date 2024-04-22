@@ -54,6 +54,10 @@ export const sidebarItems = (role: string) => {
                     key: `add-care-package`,
                 },
                 {
+                    label: <Link href="/care-package/care-package-lists">All Care Package</Link>,
+                    key: `care-package-lists`,
+                },
+                {
                     label: <Link href="/package-time/create-package-time">Create Package Time</Link>,
                     key: `create-package-time`,
                 },
@@ -61,6 +65,7 @@ export const sidebarItems = (role: string) => {
                     label: <Link href="/package-time/package-time-lists">All Package Time</Link>,
                     key: `package-time-lists`,
                 },
+
             ],
         },
     ];

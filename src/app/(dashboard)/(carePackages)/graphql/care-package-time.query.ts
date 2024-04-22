@@ -26,3 +26,12 @@ export const CARE_PACKAGE_TIME_GET_ALL = gql`
     }
   }
 `;
+
+export const GET_CARE_PACKAGE_TIME = gql`
+  query getCarePackageTime($id: Float!) {
+    carePackageTimeGet(id: $id) {
+      id
+      title
+    }
+  }
+`;

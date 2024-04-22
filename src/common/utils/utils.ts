@@ -8,8 +8,8 @@ export const convertDataToFormSelectOptions = (
   data: Record<string, any>
 ): SelectOptions[] => {
   let options: SelectOptions[] = [];
-  if (!data.length) {
-    options = data.forEach((dt: { id: number | string; title: string }) => ({
+  if (data?.length) {
+    options = data.map((dt: { id: number | string; title: string }) => ({
       value: dt.id,
       label: dt.title,
     }));

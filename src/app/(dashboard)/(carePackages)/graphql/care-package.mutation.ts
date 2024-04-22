@@ -6,8 +6,11 @@ export const CREATE_CARE_PACKAGE = gql`
       id
       title
       description
-      thumbnails
-      thumbnails
+      thumbnails {
+        id
+        name
+        fileUrl
+      }
       price
       createdAt
       updatedAt

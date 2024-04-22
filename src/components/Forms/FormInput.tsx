@@ -10,6 +10,7 @@ import { getErrorMessageByPropertyName } from "@/common/utils";
 interface IInput {
     name: string;
     type?: string;
+    disabled?: boolean;
     size?: "large" | "small";
     value?: string | string[] | undefined;
     id?: string;
@@ -26,6 +27,7 @@ const FormInput = ({
     value,
     id,
     placeholder,
+    disabled,
     validation,
     label,
     required,
@@ -56,6 +58,7 @@ const FormInput = ({
                         <Input.Password
                             type={type}
                             size={size}
+                            disabled={disabled}
                             placeholder={placeholder}
                             {...field}
                             value={value ? value : field.value}
@@ -64,6 +67,7 @@ const FormInput = ({
                         <Input
                             type={type}
                             size={size}
+                            disabled={disabled}
                             placeholder={placeholder}
                             {...field}
                             value={value ? value : field.value}

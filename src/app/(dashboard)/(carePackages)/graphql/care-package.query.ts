@@ -1,11 +1,11 @@
 import { gql } from "@apollo/client";
 
-export const GET_ALL_PERMISSION = gql`
-  query permissionGetAll(
+export const GET_ALL_CARE_PACKAGES = gql`
+  query carePackageGetAll(
     $paginationQuery: GlobalPagination!
-    $filterQuery: PermissionFilter!
+    $filterQuery: CarePackageFilter!
   ) {
-    permissionGetAll(
+    carePackageGetAll(
       paginationQuery: $paginationQuery
       filterQuery: $filterQuery
     ) {
@@ -19,13 +19,10 @@ export const GET_ALL_PERMISSION = gql`
       }
       data {
         id
-        name
-        createdAt
-        updatedAt
-        role {
-          id
-          name
-        }
+        title
+        description
+        level
+        price
       }
     }
   }

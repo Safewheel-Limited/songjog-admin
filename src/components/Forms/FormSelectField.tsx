@@ -12,6 +12,7 @@ type SelectFieldProps = {
     options: SelectOptions[];
     required?: boolean;
     name: string;
+    mode?: "multiple" | "tags" | undefined;
     size?: "large" | "small";
     value?: string | string[] | undefined;
     placeholder?: string;
@@ -24,6 +25,7 @@ const FormSelectField = ({
     name,
     size = "large",
     value,
+    mode = undefined,
     required = false,
     placeholder = "select",
     options,
@@ -50,6 +52,7 @@ const FormSelectField = ({
                 name={name}
                 render={({ field: { value, onChange } }) => (
                     <Select
+                        mode={mode}
                         onChange={handleChange ? handleChange : onChange}
                         size={size}
                         options={options}
