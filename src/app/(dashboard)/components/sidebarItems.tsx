@@ -68,6 +68,11 @@ export const sidebarItems = (role: string) => {
 
             ],
         },
+        {
+            label: <Link href="/gallery">Gallery</Link>,
+            key: "gallery",
+            icon: <ProfileOutlined />,
+        }
     ];
 
     return defaultSidebarItems;

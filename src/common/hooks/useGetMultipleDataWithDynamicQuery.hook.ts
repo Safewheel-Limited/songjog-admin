@@ -17,7 +17,7 @@ interface UsePackageTimeQueryResult {
   onPaginationChange: (current: number, pageSize: number) => void;
 }
 
-const useGetMultipleDataWithDynamicQuery = ({
+export const useGetMultipleDataWithDynamicQuery = ({
   query,
   variables,
   initialPage = 1,
@@ -41,7 +41,6 @@ const useGetMultipleDataWithDynamicQuery = ({
     setPage(current);
     setLimit(pageSize);
   };
-
   return {
     data,
     loading,
@@ -51,5 +50,3 @@ const useGetMultipleDataWithDynamicQuery = ({
     onPaginationChange,
   };
 };
-
-export default useGetMultipleDataWithDynamicQuery;

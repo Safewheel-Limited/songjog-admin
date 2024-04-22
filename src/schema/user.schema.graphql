@@ -144,6 +144,13 @@ type CarePackageResponse {
   data: [CarePackageEntity!]!
 }
 
+type GalleryResponse {
+  message: String!
+  status: Float!
+  pagination: Pagination!
+  data: [GalleryEntity!]!
+}
+
 type Query {
   test: String!
   permissionGetAll(
@@ -166,6 +173,10 @@ type Query {
     paginationQuery: GlobalPagination!
     filterQuery: CarePackageFilter!
   ): CarePackageResponse!
+  galleryGetAll(
+    paginationQuery: GlobalPagination!
+    filterQuery: GalleryFilter!
+  ): GalleryResponse!
 }
 
 input GlobalPagination {
@@ -196,6 +207,15 @@ input CarePackageFilter {
   basis: BasisType!
 }
 
+input GalleryFilter {
+  id: Float
+  name: String
+  fileUrl: String
+  mobileFileUrl: String
+  desktopFileUrl: String
+  fileType: FileType
+}
+
 type Mutation {
   signUp(signUpPayload: SignupInput!): SignResponse!
   adminSignIn(signInPayload: SignInInput!): SignResponse!
@@ -221,6 +241,7 @@ type Mutation {
     updateCarePackageInput: UpdateCarePackageInput!
   ): CarePackageEntity!
   carePackageDelete(id: Float!): CarePackageEntity!
+  galleryCreate(galleryCreate: FileInput!): GalleryEntity!
 }
 
 input SignupInput {
@@ -304,3 +325,11 @@ input UpdateCarePackageInput {
   carePackageTime: [Float!]
   id: Float!
 }
+
+input FileInput {
+  container: String = "image"
+  file: Upload!
+}
+
+# The `Upload` scalar type represents a file upload.
+scalar Upload

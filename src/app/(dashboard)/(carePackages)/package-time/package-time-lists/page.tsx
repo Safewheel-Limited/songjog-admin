@@ -1,10 +1,10 @@
 "use client";
 
-import useGetMultipleDataWithDynamicQuery from "../../hooks/useGetMultipleDataWithDynamicQuery.hook";
 import PackageListsColumnRenderer from "../_components/package-time-lists.column";
 import { CARE_PACKAGE_TIME_GET_ALL } from "../../graphql";
 import DynamicTable from "@/components/ui/DynamicTable";
 import PackageTimeUpdateModal from "../_components/package-time-update.modal";
+import { useGetMultipleDataWithDynamicQuery } from "@/common/hooks";
 
 const PackageTimeLists: React.FC = () => {
     const { data, loading, page, onPaginationChange } = useGetMultipleDataWithDynamicQuery({ query: CARE_PACKAGE_TIME_GET_ALL });

@@ -6,9 +6,9 @@ import { useMutation } from "@apollo/client";
 import { Button, Flex, message } from "antd";
 import Card from "antd/es/card/Card";
 
-import useGetMultipleDataWithDynamicQuery from "../../hooks/useGetMultipleDataWithDynamicQuery.hook";
 import { CARE_PACKAGE_TIME_GET_ALL, CREATE_CARE_PACKAGE } from "../../graphql";
 import { BasisItems } from "../../_constants/select-basis-item.constant";
+import { useGetMultipleDataWithDynamicQuery } from "@/common/hooks";
 import FormSelectField from "@/components/Forms/FormSelectField";
 import { convertDataToFormSelectOptions } from "@/common/utils";
 import FormTextArea from "@/components/Forms/FormTextArea";

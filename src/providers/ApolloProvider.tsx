@@ -1,7 +1,7 @@
 "use client";
 
 import { getCookies } from "@/common/utils";
-import { ApolloLink, HttpLink } from "@apollo/client";
+import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from '@apollo/client/link/context';
 
 import {
@@ -10,12 +10,13 @@ import {
     NextSSRApolloClient,
     SSRMultipartLink,
 } from "@apollo/experimental-nextjs-app-support/ssr";
+import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 
 function makeClient() {
     const httpLink = new HttpLink({
         uri: process.env.NEXT_PUBLIC_BASE_API_URL as string,
     });
-
+    const uploadLink = createUploadLink({ uri: process.env.NEXT_PUBLIC_BASE_API_URL as string, });
     const authLink = setContext((_, { headers }) => {
         const token = getCookies();
         return {
@@ -35,9 +36,9 @@ function makeClient() {
                     new SSRMultipartLink({
                         stripDefer: true,
                     }),
-                    authLink.concat(httpLink),
+                    authLink.concat(uploadLink).concat(httpLink),
                 ])
-                : authLink.concat(httpLink),
+                : authLink.concat(uploadLink).concat(httpLink),
     });
 }
 
