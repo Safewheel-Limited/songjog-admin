@@ -81,13 +81,6 @@ const GalleryColumnRender = () => {
         return (
           //   <Permission>
           <Space>
-            <Button
-              key={KeyEnum.ROLE_ACCESS_UPDATE}
-              type="primary"
-              icon={<EditOutlined />}
-              style={{ background: "#4682A9" }}
-            // onClick={() => handleUpdatePackageTime(data.id)}
-            />
             <Popconfirm
               title="Are you sure ?"
               description="Are you sure to delete this Role"
