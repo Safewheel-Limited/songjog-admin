@@ -14,12 +14,17 @@ export const GALLERY_GET_ALL = gql`
         id
         name
         fileUrl
+        fileType
+        visible
+        createdAt
+        updatedAt
       }
       pagination {
         page
         limit
         total
         totalPages
+        hasNextPage
       }
     }
   }
