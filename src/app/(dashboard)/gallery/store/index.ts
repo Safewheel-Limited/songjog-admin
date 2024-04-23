@@ -1,28 +1,36 @@
 import { create } from "zustand";
 
+export type ImageType = { id: number; fileUrl: string };
 // select images state manage
 type Store = {
-  selectImages: number[];
+  selectImages: ImageType[];
 };
 
 type Actions = {
-  handleSidebarMenuCollapse: (id: number) => void;
+  handleSelectImages: (item: ImageType) => void;
+  resetSelectedImages: () => void;
 };
 
 export const useSelectImages = create<Store & Actions>(
   (set, get): Store & Actions => ({
     selectImages: [],
-    handleSidebarMenuCollapse: (id) => {
+    handleSelectImages: (item: ImageType) => {
       const existSelectImage = get().selectImages;
-      if (existSelectImage.includes(id)) {
+      const filterImage = existSelectImage.filter(
+        (image) => image.id === item.id
+      );
+      if (filterImage.length) {
         const updateSelectImage = existSelectImage.filter(
-          (item) => item !== id
+          (image) => image.id !== item.id
         );
         set({ selectImages: updateSelectImage });
       } else {
-        const updateSelectImage = [...existSelectImage, id];
+        const updateSelectImage = [...existSelectImage, item];
         set({ selectImages: updateSelectImage });
       }
+    },
+    resetSelectedImages: () => {
+      set({ selectImages: [] });
     },
   })
 );

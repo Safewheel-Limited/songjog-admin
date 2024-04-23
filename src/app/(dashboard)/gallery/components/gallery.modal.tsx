@@ -13,7 +13,7 @@ const GalleryModal = () => {
     const { data, limit, loading, page, onPaginationChange } =
         useGetMultipleDataWithDynamicQuery({ query: GALLERY_GET_ALL });
     const { modal, setModal } = useModal();
-    const { selectImages, handleSidebarMenuCollapse } = useSelectImages();
+    const { selectImages, handleSelectImages } = useSelectImages();
     return (
         <DynamicModal
             title="Images"
@@ -21,7 +21,12 @@ const GalleryModal = () => {
             closeModal={() => setModal("")}
             width={700}
             showCancelButton
-            footer={<Button onClick={() => setModal("")}>Cancel</Button>}
+            footer={
+                <Flex justify="flex-end" gap={10}>
+                    <Button onClick={() => setModal("")}>Cancel</Button>
+                    <Button onClick={() => setModal("")} type="primary">Add Images</Button>
+                </Flex>
+            }
         >
             <>
                 <div>
@@ -43,11 +48,11 @@ const GalleryModal = () => {
                                     objectFit="cover"
                                     objectPosition="top center"
                                     key={item.id}
-                                    onClick={() => handleSidebarMenuCollapse(item.id)}
+                                    onClick={() => handleSelectImages({ id: item.id, fileUrl: item.fileUrl })}
                                     style={{
                                         cursor: "pointer",
                                         borderRadius: "10px",
-                                        border: selectImages.includes(item.id)
+                                        border: selectImages.filter(image => image.id === item.id).length
                                             ? "3px solid blue"
                                             : "",
                                     }}

@@ -15,10 +15,6 @@ export const CREATE_CARE_PACKAGE = gql`
       createdAt
       updatedAt
       level
-      carePackageTime {
-        title
-        title
-      }
     }
   }
 `;
