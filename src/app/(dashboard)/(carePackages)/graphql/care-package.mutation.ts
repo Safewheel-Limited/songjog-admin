@@ -18,3 +18,12 @@ export const CREATE_CARE_PACKAGE = gql`
     }
   }
 `;
+
+export const CARE_PACKAGE_DELETE = gql`
+  mutation carePackageDelete($id: Float!) {
+    carePackageDelete(id: $id) {
+      title
+      id
+    }
+  }
+`;

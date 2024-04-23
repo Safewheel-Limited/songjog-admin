@@ -21,15 +21,18 @@ import FormInput from "@/components/Forms/FormInput";
 import { MODAL_ENUMS } from "@/common/constants";
 import Form from "@/components/Forms/Form";
 import { useModal } from "@/common/store";
+import { useRouter } from "next/navigation";
 
 const AddCarePacakge = () => {
     const { data } = useGetMultipleDataWithDynamicQuery({
         query: CARE_PACKAGE_TIME_GET_ALL,
     });
-    const [carePackageCreate, { loading, error }] = useMutation(CREATE_CARE_PACKAGE);
+    const [carePackageCreate, { loading, error }] = useMutation(CREATE_CARE_PACKAGE, {
+        refetchQueries: ["carePackageGetAll"]
+    });
     const { selectImages, resetSelectedImages } = useSelectImages();
     const { setModal } = useModal();
-
+    const router = useRouter();
     const onSubmit: SubmitHandler<CreateCarePackageFormValues> = async (
         data: any
     ) => {
@@ -46,6 +49,7 @@ const AddCarePacakge = () => {
             if (res.data) {
                 message.success("Care package created successfully");
                 resetSelectedImages();
+                router.push("/care-package/care-package-lists")
             }
         } catch (err) {
             message.error(error?.message || "Something want wrong. please try again!");

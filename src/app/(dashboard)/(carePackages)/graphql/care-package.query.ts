@@ -23,6 +23,8 @@ export const GET_ALL_CARE_PACKAGES = gql`
         description
         level
         price
+        createdAt
+        updatedAt
       }
     }
   }
