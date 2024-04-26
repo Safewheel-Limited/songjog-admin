@@ -29,3 +29,25 @@ export const GET_ALL_CARE_PACKAGES = gql`
     }
   }
 `;
+
+export const GET_CARE_PACKAGE = gql`
+  query carePackageGet($id: Float!) {
+    carePackageGet(id: $id) {
+      id
+      title
+      description
+      thumbnails {
+        id
+        name
+        fileUrl
+      }
+      level
+      price
+      basis
+      carePackageTime {
+        id
+        title
+      }
+    }
+  }
+`;

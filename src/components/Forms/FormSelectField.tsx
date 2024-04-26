@@ -1,5 +1,6 @@
 "use client";
 
+import { getErrorMessageByPropertyName } from "@/common/utils";
 import { Select } from "antd";
 import { useFormContext, Controller } from "react-hook-form";
 
@@ -19,6 +20,8 @@ type SelectFieldProps = {
     label?: string;
     defaultValue?: SelectOptions;
     handleChange?: (el: string) => void;
+    onSelect?: (value: string | number, option: any) => void;
+
 };
 
 const FormSelectField = ({
@@ -32,9 +35,10 @@ const FormSelectField = ({
     label,
     defaultValue,
     handleChange,
+    onSelect
 }: SelectFieldProps) => {
-    const { control } = useFormContext();
-
+    const { control, formState: { errors } } = useFormContext();
+    const errorMessage = getErrorMessageByPropertyName(errors, name);
     return (
         <div>
             {required ? (
@@ -53,6 +57,7 @@ const FormSelectField = ({
                 render={({ field: { value, onChange } }) => (
                     <Select
                         mode={mode}
+                        onSelect={onSelect}
                         onChange={handleChange ? handleChange : onChange}
                         size={size}
                         options={options}
@@ -62,6 +67,7 @@ const FormSelectField = ({
                     />
                 )}
             />
+            <small style={{ color: "red" }}>{errorMessage}</small>
         </div>
     );
 };

@@ -4,8 +4,10 @@ import { Button, Popconfirm, Space, message } from "antd";
 import { CARE_PACKAGE_DELETE } from "../../graphql";
 import { KeyEnum } from "@/common/constants";
 import { useMutation } from "@apollo/client";
+import { useRouter } from "next/navigation";
 
 const CarePackageColumnRenderer = () => {
+    const router = useRouter();
 
     const [carePackageDelete, { loading }] = useMutation(CARE_PACKAGE_DELETE, {
         refetchQueries: ["carePackageGetAll"],
@@ -74,7 +76,7 @@ const CarePackageColumnRenderer = () => {
                             type="primary"
                             icon={<EditOutlined />}
                             style={{ background: "#4682A9" }}
-                        // onClick={() => handleUpdatePackageTime(data.id)}
+                            onClick={() => router.push(`/care-package/edit-care-package/${data.id}`)}
                         />
                         <Popconfirm
                             title="Are you sure ?"
