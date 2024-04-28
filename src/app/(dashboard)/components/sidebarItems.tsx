@@ -85,6 +85,22 @@ export const sidebarItems = (role: string) => {
 
             ],
         },
+        {
+            label: "Course",
+            key: "course",
+            icon: <ProfileOutlined />,
+            children: [
+                {
+                    label: <Link href="/course">Course List</Link>,
+                    key: `course-list`,
+                },
+                {
+                    label: <Link href="/course/add-course">Add New Course</Link>,
+                    key: `add-course`,
+                },
+            ],
+        },
+
     ];
 
     return defaultSidebarItems;

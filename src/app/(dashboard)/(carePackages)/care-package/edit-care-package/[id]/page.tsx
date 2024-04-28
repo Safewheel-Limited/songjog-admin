@@ -8,50 +8,78 @@ import { Button, Flex, message } from "antd";
 import Card from "antd/es/card/Card";
 import Image from "next/image";
 
-import { CARE_PACKAGE_TIME_GET_ALL, CREATE_CARE_PACKAGE } from "../../graphql";
+import { CARE_PACKAGE_TIME_GET_ALL, GET_CARE_PACKAGE, UPDATE_CARE_PACKAGE } from "../../../graphql";
 import GalleryModal from "@/app/(dashboard)/gallery/components/gallery.modal";
 import { ImageType, useSelectImages } from "@/app/(dashboard)/gallery/store";
-import { BasisItems } from "../../_constants/select-basis-item.constant";
-import { useGetMultipleDataWithDynamicQuery } from "@/common/hooks";
+import { BasisItems } from "../../../_constants/select-basis-item.constant";
+import { useGetMultipleDataWithDynamicQuery, useGetSingleDataWithDynamicQuery } from "@/common/hooks";
 import FormSelectField from "@/components/Forms/FormSelectField";
 import { convertDataToFormSelectOptions } from "@/common/utils";
 import FormTextArea from "@/components/Forms/FormTextArea";
-import { CreateCarePackageFormValues } from "../../types";
+import { CreateCarePackageFormValues } from "../../../types";
 import FormInput from "@/components/Forms/FormInput";
 import { MODAL_ENUMS } from "@/common/constants";
 import Form from "@/components/Forms/Form";
 import { useModal } from "@/common/store";
 import { useRouter } from "next/navigation";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { addCarePackageSchema } from "../../validation";
+import { useEffect, useState } from "react";
 
-const AddCarePacakge = () => {
+const EditCarePacakge = ({ params }: { params: { id: string } }) => {
+    const [defaultValues, setDefaultValues] = useState({});
+    const { selectImages, handleSelectImages, resetSelectedImages } = useSelectImages();
     const { data } = useGetMultipleDataWithDynamicQuery({
         query: CARE_PACKAGE_TIME_GET_ALL,
     });
-    const [carePackageCreate, { loading, error }] = useMutation(CREATE_CARE_PACKAGE, {
-        refetchQueries: ["carePackageGetAll"]
+    const { data: singleCarePackage } = useGetSingleDataWithDynamicQuery({
+        query: GET_CARE_PACKAGE,
+        variables: {
+            id: +params.id
+        }
     });
-    const { selectImages, resetSelectedImages } = useSelectImages();
+
+    const [carePackageUpdate, { loading, error }] = useMutation(UPDATE_CARE_PACKAGE, {
+        refetchQueries: ["carePackageGetAll", "carePackageGet"]
+    })
+
+    useEffect(() => {
+        if (singleCarePackage?.carePackageGet) {
+            const { carePackageTime } = singleCarePackage?.carePackageGet || {};
+            setDefaultValues(singleCarePackage?.carePackageGet)
+            const converTimeOptions = convertDataToFormSelectOptions(carePackageTime)
+            setDefaultValues((prev) => ({
+                ...prev,
+                carePackageTime: converTimeOptions
+            }))
+
+            singleCarePackage?.carePackageGet.thumbnails?.forEach((item) => (
+                handleSelectImages({ id: item.id, fileUrl: item.fileUrl })
+            ))
+        }
+    }, [singleCarePackage, handleSelectImages])
+
     const { setModal } = useModal();
     const router = useRouter();
+
     const onSubmit: SubmitHandler<CreateCarePackageFormValues> = async (
         data: any
     ) => {
         data.thumbnails = selectImages.map(image => image.id);
         data.price = Number(data.price);
         data.level = Number(data.level);
-
+        data.carePackageTime = data.carePackageTime && data.carePackageTime.map((item: any) => item.value)
+        delete data.__typename
+        console.log("carePackageTime", data)
         try {
-            const res = await carePackageCreate({
+            const res = await carePackageUpdate({
                 variables: {
                     input: data,
                 },
             });
             if (res.data) {
-                message.success("Care package created successfully");
+                message.success("Care package updated successfully");
                 resetSelectedImages();
-                // router.push("/care-package/care-package-lists")
+                setDefaultValues({})
+                router.push("/care-package/care-package-lists")
             }
         } catch (err) {
             message.error(error?.message || "Something want wrong. please try again!");
@@ -81,11 +109,21 @@ const AddCarePacakge = () => {
         </Flex>
     );
 
+    const handleSelect = (_: any, option: any) => {
+
+        // setDefaultValues((prev) => ({
+        //     ...prev,
+        //     carePackageTime: [...prev.carePackageTime, option]
+        // }))
+        console.log("option", option);
+    }
+
+
     return (
         <>
             <Card>
-                <Title level={3}>Add Care Package</Title>
-                <Form submitHandler={onSubmit} resolver={yupResolver(addCarePackageSchema)}>
+                <Title level={3}>Update Care Package</Title>
+                <Form defaultValues={defaultValues} submitHandler={onSubmit} >
                     <Flex gap="large" style={{ width: "100%" }} justify="space-between">
                         <Flex vertical gap="large" style={{ flexBasis: "50%" }}>
                             <FormInput
@@ -134,6 +172,9 @@ const AddCarePacakge = () => {
                                 placeholder="Select Care Package Time"
                                 label="Select Care Package Time"
                                 required
+                                // defaultValue={defaultValues?.carePackageTime}
+                                onSelect={(_, option: any) => handleSelect(_, option)}
+
                             />
                             {showSelectedImage}
                             <Button
@@ -143,7 +184,6 @@ const AddCarePacakge = () => {
                             >
                                 Select Image
                             </Button>
-                            {/* {<small style={{ color: "red" }}>Please select at least a Image</small>} */}
                             <Button
                                 loading={loading}
                                 disabled={loading}
@@ -151,7 +191,7 @@ const AddCarePacakge = () => {
                                 htmlType="submit"
                                 block
                             >
-                                Create Package
+                                Update Care Package
                             </Button>
                         </Flex>
                     </Flex>
@@ -162,4 +202,4 @@ const AddCarePacakge = () => {
     );
 };
 
-export default AddCarePacakge;
+export default EditCarePacakge;

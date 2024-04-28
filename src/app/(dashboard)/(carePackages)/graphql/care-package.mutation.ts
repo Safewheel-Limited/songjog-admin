@@ -18,6 +18,24 @@ export const CREATE_CARE_PACKAGE = gql`
     }
   }
 `;
+export const UPDATE_CARE_PACKAGE = gql`
+  mutation carePackageUpdate($input: UpdateCarePackageInput!) {
+    carePackageUpdate(updateCarePackageInput: $input) {
+      id
+      title
+      description
+      thumbnails {
+        id
+        name
+        fileUrl
+      }
+      price
+      createdAt
+      updatedAt
+      level
+    }
+  }
+`;
 
 export const CARE_PACKAGE_DELETE = gql`
   mutation carePackageDelete($id: Float!) {

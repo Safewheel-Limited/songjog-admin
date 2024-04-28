@@ -1,14 +1,11 @@
 import { gql } from "@apollo/client";
 
-export const GET_ALL_CARE_PACKAGES = gql`
-  query carePackageGetAll(
+export const GET_ALL_COURSE = gql`
+  query courseGetAll(
     $paginationQuery: GlobalPagination!
-    $filterQuery: CarePackageFilter!
+    $filterQuery: CourseFilter!
   ) {
-    carePackageGetAll(
-      paginationQuery: $paginationQuery
-      filterQuery: $filterQuery
-    ) {
+    courseGetAll(paginationQuery: $paginationQuery, filterQuery: $filterQuery) {
       message
       status
       pagination {
@@ -17,12 +14,16 @@ export const GET_ALL_CARE_PACKAGES = gql`
         total
         totalPages
       }
+
       data {
         id
         title
         description
-        level
         price
+        course_time
+        author {
+          fullName
+        }
         createdAt
         updatedAt
       }
@@ -30,23 +31,25 @@ export const GET_ALL_CARE_PACKAGES = gql`
   }
 `;
 
-export const GET_CARE_PACKAGE = gql`
-  query carePackageGet($id: Float!) {
-    carePackageGet(id: $id) {
+export const GET_COURSE = gql`
+  query courseGet($id: Int!) {
+    courseGet(id: $id) {
       id
       title
       description
+      about_course
+      price
+      course_time
       thumbnails {
         id
-        name
         fileUrl
       }
-      level
-      price
-      basis
-      carePackageTime {
+      levelId
+      lesson {
         id
-        title
+      }
+      author {
+        id
       }
     }
   }
