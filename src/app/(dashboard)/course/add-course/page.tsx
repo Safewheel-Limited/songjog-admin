@@ -8,15 +8,15 @@ import { Button, Flex, message } from "antd";
 import Card from "antd/es/card/Card";
 import Image from "next/image";
 
-// import { CARE_PACKAGE_TIME_GET_ALL, CREATE_CARE_PACKAGE } from "../../graphql";
+
 import GalleryModal from "@/app/(dashboard)/gallery/components/gallery.modal";
 import { ImageType, useSelectImages } from "@/app/(dashboard)/gallery/store";
-// import { BasisItems } from "../../_constants/select-basis-item.constant";
+
 import { useGetMultipleDataWithDynamicQuery } from "@/common/hooks";
 import FormSelectField from "@/components/Forms/FormSelectField";
 import { convertDataToFormSelectOptions } from "@/common/utils";
 import FormTextArea from "@/components/Forms/FormTextArea";
-// import { CreateCarePackageFormValues } from "../../types";
+
 import FormInput from "@/components/Forms/FormInput";
 import { MODAL_ENUMS } from "@/common/constants";
 import Form from "@/components/Forms/Form";
@@ -24,38 +24,39 @@ import { useModal } from "@/common/store";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CARE_PACKAGE_TIME_GET_ALL, CREATE_CARE_PACKAGE } from "../../(carePackages)/graphql";
-import { CreateCarePackageFormValues } from "../../(carePackages)/types";
-import { BasisItems } from "../../(carePackages)/_constants/select-basis-item.constant";
-// import { addCarePackageSchema } from "../../validation";
+import { CreateCourseFormValues } from "../types";
+import { CREATE_COURSE } from "../graphql";
 
-const AddCarePacakge = () => {
+
+const AddCourse = () => {
     const { data } = useGetMultipleDataWithDynamicQuery({
         query: CARE_PACKAGE_TIME_GET_ALL,
     });
 
-    const [carePackageCreate, { loading, error }] = useMutation(CREATE_CARE_PACKAGE, {
-        refetchQueries: ["carePackageGetAll"]
+    const [courseCreate, { loading, error }] = useMutation(CREATE_COURSE, {
+        refetchQueries: ["courseGetAll"]
     });
     const { selectImages, resetSelectedImages } = useSelectImages();
     const { setModal } = useModal();
     const router = useRouter();
-    const onSubmit: SubmitHandler<CreateCarePackageFormValues> = async (
-        data: any
+    const onSubmit: SubmitHandler<CreateCourseFormValues> = async (
+        data: CreateCourseFormValues
     ) => {
-        data.thumbnails = selectImages.map(image => image.id);
+        data.thumbnailsIds = selectImages.map(image => image.id);
+        data.lessonIds = [];
         data.price = Number(data.price);
-        data.level = Number(data.level);
-
+        data.levelId = Number(data.levelId);
+        data.authorId = "f5d89311-153f-47aa-976b-0b2313e45823";
         try {
-            const res = await carePackageCreate({
+            const res = await courseCreate({
                 variables: {
                     input: data,
                 },
             });
             if (res.data) {
-                message.success("Care package created successfully");
+                message.success("Course created successfully");
                 resetSelectedImages();
-                // router.push("/care-package/care-package-lists")
+                router.push("/course");
             }
         } catch (err) {
             message.error(error?.message || "Something want wrong. please try again!");
@@ -85,6 +86,8 @@ const AddCarePacakge = () => {
         </Flex>
     );
 
+    // console.log("courseData", courseData);
+
     return (
         <>
             <Card>
@@ -112,7 +115,7 @@ const AddCarePacakge = () => {
                             />
 
                             <FormInput
-                                name="level"
+                                name="levelId"
                                 label="Level"
                                 placeholder="Write your level"
                                 type="number"
@@ -133,13 +136,15 @@ const AddCarePacakge = () => {
                                 required
                             />
 
-
                             <FormSelectField
                                 mode="multiple"
-                                name="lessonsIds"
-                                options={convertDataToFormSelectOptions(
-                                    data?.carePackageTimeGetAll.data
-                                )}
+                                name="lessonIds"
+                                options={[
+                                    { value: "1", label: "lesson 1" },
+                                    { value: "2", label: "lesson 2" },
+                                    { value: "3", label: "lesson 3" },
+                                    { value: "4", label: "lesson 4" },
+                                ]}
                                 placeholder="Select Lessons"
                                 label="Select Lessons"
                                 required
@@ -160,7 +165,7 @@ const AddCarePacakge = () => {
                                 htmlType="submit"
                                 block
                             >
-                                Create Package
+                                Create Course
                             </Button>
                         </Flex>
                     </Flex>
@@ -171,4 +176,4 @@ const AddCarePacakge = () => {
     );
 };
 
-export default AddCarePacakge;
+export default AddCourse;

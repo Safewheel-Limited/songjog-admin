@@ -79,7 +79,7 @@ export const sidebarItems = (role: string) => {
             icon: <ProfileOutlined />,
             children: [
                 {
-                    label: <Link href="/course/course-lists">Course List</Link>,
+                    label: <Link href="/course">Course List</Link>,
                     key: `course-list`,
                 },
                 {
