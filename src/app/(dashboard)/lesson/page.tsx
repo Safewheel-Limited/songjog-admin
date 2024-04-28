@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button, Card, Flex } from 'antd';
 import DynamicTable from '@/components/ui/DynamicTable';
 import LessonColumnRender from './components/lesson.column';
+import LessonUpdateModal from './components/lesson.modal';
 
 const LessonListPage = () => {
     const { data, loading, page, onPaginationChange } = useGetMultipleDataWithDynamicQuery({ query: GET_ALL_LESSON });
@@ -28,6 +29,7 @@ const LessonListPage = () => {
                 totalPages={data?.lessonGetAll?.pagination?.total}
                 pageSize={page}
             />
+            <LessonUpdateModal />
         </Card>
     )
 }

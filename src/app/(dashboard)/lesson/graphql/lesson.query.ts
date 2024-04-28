@@ -31,6 +31,7 @@ export const GET_LESSON = gql`
       id
       lesson_time
       lesson_title
+      courseId
       createdAt
       updatedAt
     }
