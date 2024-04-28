@@ -69,10 +69,22 @@ export const sidebarItems = (role: string) => {
             ],
         },
         {
-            label: <Link href="/gallery">Gallery</Link>,
-            key: "gallery",
+            label: "Lessons",
+            key: "lessons",
             icon: <ProfileOutlined />,
-        }
+            children: [
+                {
+                    label: <Link href="/lesson/add-lesson">Add Lesson </Link>,
+                    key: `add-lesson`,
+                },
+                
+                {
+                    label: <Link href="/lesson">All Lessons</Link>,
+                    key: `lesson-lists`,
+                },
+
+            ],
+        },
     ];
 
     return defaultSidebarItems;
