@@ -20,6 +20,8 @@ export enum MODAL_ENUMS {
   // Care package time enums
   UPDATE_CARE_PACKAGE = "update_care_package",
 
-  //  gallery modal enums
+  //  modal enums
   OPEN_GALLERY_MODAL = "open_gallery_modal",
+  OPEN_UPDATE_LESSON_MODAL = "open_update_lesson_modal",
+  OPEN_ADD_LESSON_MODAL = "open_add_lesson_modal"
 }

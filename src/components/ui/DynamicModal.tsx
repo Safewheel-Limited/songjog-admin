@@ -11,6 +11,8 @@ interface IModal {
     handleOk?: () => void;
     showCancelButton?: boolean;
     showOkButton?: boolean;
+    closable?:boolean;
+    maskClosable?:boolean;
     footer?: boolean | ReactNode;
 }
 
@@ -25,11 +27,15 @@ const DynamicModal = ({
     footer,
     showCancelButton = true,
     showOkButton = true,
+    maskClosable = true,
+    closable = true
 }: IModal) => {
     return (
         <Modal
             title={title}
             open={isOpen}
+            maskClosable={maskClosable}
+            closable={closable}
             width={width}
             onOk={handleOk}
             confirmLoading={confirmLoading}

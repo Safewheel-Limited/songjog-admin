@@ -151,6 +151,98 @@ type GalleryResponse {
   data: [GalleryEntity!]!
 }
 
+type Review {
+  id: Int!
+  user: User!
+  userId: Int!
+  courseId: Int!
+  rating: Float!
+  comment: String
+  createdAt: Int!
+  updatedAt: DateTime!
+}
+
+type Enrollment {
+  id: Int!
+  user: User!
+  userId: String!
+  courseId: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Level {
+  id: Int!
+  levelTitle: String!
+  course: [Course!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Course {
+  id: Int!
+  title: String!
+  description: String!
+  about_course: String!
+  price: Float!
+  thumbnails: [GalleryEntity!]
+  course_time: String!
+  author: User!
+  authorId: String!
+  enrollment: [Enrollment!]
+  review: [Review!]
+  lesson: [Lesson!]
+  level: Level
+  levelId: Int
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Lesson {
+  id: Int!
+  title: String!
+  description: String!
+  time: String!
+  lessonItems: [LessonItem!]!
+  course: Course
+  courseId: Int
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type LessonItem {
+  id: Int!
+  lesson: Lesson
+  lessonId: Int!
+  title: String!
+  description: String!
+  time: String!
+  file: [GalleryEntity!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type LessonResponse {
+  message: String!
+  status: Float!
+  pagination: Pagination!
+  data: [Lesson!]!
+}
+
+type CourseResponse {
+  message: String!
+  status: Float!
+  pagination: Pagination!
+  data: [Course!]!
+}
+
+type CourseHomeResponse {
+  popularCourse: [Course!]
+  level: [Level!]!
+  yourCourse: [Course!]
+  allCourse: [Course!]!
+}
+
 type Query {
   test: String!
   permissionGetAll(
@@ -177,6 +269,33 @@ type Query {
     paginationQuery: GlobalPagination!
     filterQuery: GalleryFilter!
   ): GalleryResponse!
+  reviewGetAll(
+    paginationQuery: GlobalPagination!
+    filterQuery: ReviewFilter!
+  ): [Review!]!
+  reviewGet(id: Int!): Review!
+  enrollmentGetAll(
+    paginationQuery: GlobalPagination!
+    filterQuery: EnrollmentFilter!
+  ): [Enrollment!]!
+  enrollmentGet(id: Int!): Enrollment!
+  lessonItemGetAll(
+    paginationQuery: GlobalPagination!
+    filterQuery: LessonItemFilter!
+  ): [LessonItem!]!
+  lessonItemGet(id: Int!): LessonItem!
+  lessonGetAll(
+    paginationQuery: GlobalPagination!
+    filterQuery: LessonFilter!
+  ): LessonResponse!
+  lessonGet(id: Int!): Lesson!
+  courseHome: CourseHomeResponse!
+  courseGetAll(
+    paginationQuery: GlobalPagination!
+    filterQuery: CourseFilter!
+  ): CourseResponse!
+  courseGet(id: Int!): Course!
+  level(id: Int!): Level!
 }
 
 input GlobalPagination {
@@ -200,11 +319,11 @@ input CarePackageTimeFilter {
 }
 
 input CarePackageFilter {
-  id: Float!
-  title: String!
-  level: Float!
-  price: Float!
-  basis: BasisType!
+  id: Float
+  title: String
+  level: Float
+  price: Float
+  basis: BasisType
 }
 
 input GalleryFilter {
@@ -214,6 +333,30 @@ input GalleryFilter {
   mobileFileUrl: String
   desktopFileUrl: String
   fileType: FileType
+}
+
+input ReviewFilter {
+  id: Int
+  userId: String
+  courseId: Int
+  rating: Float
+  comment: String
+}
+
+input EnrollmentFilter {
+  id: Int
+}
+
+input LessonItemFilter {
+  id: Int
+}
+
+input LessonFilter {
+  id: Int
+}
+
+input CourseFilter {
+  id: Int
 }
 
 type Mutation {
@@ -242,6 +385,24 @@ type Mutation {
   ): CarePackageEntity!
   carePackageDelete(id: Float!): CarePackageEntity!
   galleryCreate(galleryCreate: FileInput!): GalleryEntity!
+  reviewCreate(createReviewInput: CreateReviewInput!): Review!
+  reviewUpdate(updateReviewInput: UpdateReviewInput!): Review!
+  reviewDelete(id: Int!): Review!
+  enrollmentCreate(createEnrollmentInput: CreateEnrollmentInput!): Enrollment!
+  enrollmentUpdate(updateEnrollmentInput: UpdateEnrollmentInput!): Enrollment!
+  enrollmentDelete(id: Int!): Enrollment!
+  lessonItemCreate(createLessonItemInput: CreateLessonItemInput!): LessonItem!
+  lessonItemUpdate(updateLessonItemInput: UpdateLessonItemInput!): LessonItem!
+  lessonItemDelete(id: Int!): LessonItem!
+  lessonCreate(createLessonInput: CreateLessonInput!): Lesson!
+  lessonUpdate(updateLessonInput: UpdateLessonInput!): Lesson!
+  lessonDelete(id: Int!): Lesson!
+  courseCreate(createCourseInput: CreateCourseInput!): Course!
+  courseUpdate(updateCourseInput: UpdateCourseInput!): Course!
+  courseDelete(id: Int!): Course!
+  createLevel(createLevelInput: CreateLevelInput!): Level!
+  updateLevel(updateLevelInput: UpdateLevelInput!): Level!
+  removeLevel(id: Int!): Level!
 }
 
 input SignupInput {
@@ -333,3 +494,109 @@ input FileInput {
 
 # The `Upload` scalar type represents a file upload.
 scalar Upload
+
+input CreateReviewInput {
+  courseId: Int!
+  rating: Float!
+  comment: String!
+}
+
+input UpdateReviewInput {
+  courseId: Int
+  rating: Float
+  comment: String
+  id: Int!
+}
+
+input CreateEnrollmentInput {
+  userId: String!
+  courseId: Int!
+}
+
+input UpdateEnrollmentInput {
+  userId: String
+  courseId: Int
+  id: Int!
+}
+
+input CreateLessonItemInput {
+  lessonId: Int!
+  title: String!
+  description: String!
+  time: String!
+  galleryIds: [Int!]
+}
+
+input UpdateLessonItemInput {
+  lessonId: Int
+  title: String
+  description: String
+  time: String
+  galleryIds: [Int!]
+  id: Int!
+}
+
+input CreateLessonInput {
+  lesson_title: String!
+  lesson_time: String!
+  courseId: Int!
+}
+
+input UpdateLessonInput {
+  lesson_title: String
+  lesson_time: String
+  courseId: Int
+  id: Int!
+}
+
+input CreateCourseInput {
+  title: String!
+  description: String!
+  about_course: String!
+  price: Float!
+
+  # Gallery Id
+  thumbnailsIds: [Int!]!
+  course_time: String!
+
+  # User UID
+  authorId: String!
+
+  # Lesson Id
+  lessonIds: [Int!]!
+
+  # Level ID
+  levelId: Int!
+}
+
+input UpdateCourseInput {
+  title: String
+  description: String
+  about_course: String
+  price: Float
+
+  # Gallery Id
+  thumbnailsIds: [Int!]
+  course_time: String
+
+  # User UID
+  authorId: String
+
+  # Lesson Id
+  lessonIds: [Int!]
+
+  # Level ID
+  levelId: Int
+  id: Int!
+}
+
+input CreateLevelInput {
+  # Example field (placeholder)
+  exampleField: Int!
+}
+
+input UpdateLevelInput {
+  # Example field (placeholder)
+  exampleField: Int
+  id: Int!
+}
