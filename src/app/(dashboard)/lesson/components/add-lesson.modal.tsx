@@ -14,33 +14,38 @@ import { useModal } from "@/common/store";
 import FormSelectField from "@/components/Forms/FormSelectField";
 import { CREATE_LESSON } from "../graphql/lesson.mutation";
 import { lessonSchema } from "../validation";
-import { useRouter } from "next/navigation";
+import { useGetMultipleDataWithDynamicQuery } from "@/common/hooks";
+import { GET_ALL_COURSE } from "../../course/graphql";
+import { convertDataToFormSelectOptions } from "@/common/utils";
 
 const LessonAddModal = () => {
   const { modal, setModal } = useModal();
-  const [lessonCreate, {loading, error}] = useMutation(CREATE_LESSON, {
-    refetchQueries:["lessonGetAll"]
+  const [lessonCreate, { loading, error }] = useMutation(CREATE_LESSON, {
+    refetchQueries: ["lessonGetAll"],
   });
-  const router = useRouter();
+
+  const {
+    data: courses,
+  } = useGetMultipleDataWithDynamicQuery({ query: GET_ALL_COURSE });
+
   const onSubmit: SubmitHandler<any> = async (data: any) => {
+    data.courseId = Number(data.courseId)
     try {
-      data.courseId = 11;
-    const result = await lessonCreate({
+      const result = await lessonCreate({
         variables: {
-            input: data
-        }
-    })
+          input: data,
+        },
+      });
 
-    if (result.data) {
-    message.success("Lesson created Successfully.");
-    setModal("")
+      if (result.data) {
+        message.success("Lesson created Successfully.");
+        setModal("");
+      }
+    } catch (err) {
+      message.error(error?.message || "Something went wrong! Please try again");
+      console.log(err);
+    }
   };
-
-  } catch (err) {
-    message.error(error?.message || "Something went wrong! Please try again");
-      console.log(err)
-  }
-}
   return (
     <DynamicModal
       title="Add Lesson"
@@ -49,11 +54,8 @@ const LessonAddModal = () => {
       showCancelButton
       footer={false}
     >
-       <Form
-        submitHandler={onSubmit}
-      resolver={yupResolver(lessonSchema)}
-      >
-        <Flex vertical gap="large" >
+      <Form submitHandler={onSubmit} resolver={yupResolver(lessonSchema)}>
+        <Flex vertical gap="large">
           <FormInput
             name="lesson_title"
             label="Lesson Title"
@@ -70,9 +72,7 @@ const LessonAddModal = () => {
           />
           <FormSelectField
             name="courseId"
-            options={[{
-              value:"2", label:"2"
-            }]}
+            options={convertDataToFormSelectOptions(courses?.courseGetAll?.data)}
             placeholder="Select Course"
             label="Select Course"
             required

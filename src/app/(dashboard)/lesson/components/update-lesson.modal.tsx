@@ -5,7 +5,7 @@ import { Button, Flex, message } from "antd";
 import { SubmitHandler } from "react-hook-form";
 import { useMutation, useQuery } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import DynamicModal from "@/components/ui/DynamicModal";
 import FormInput from "@/components/Forms/FormInput";
@@ -17,11 +17,15 @@ import FormSelectField from "@/components/Forms/FormSelectField";
 import { GET_LESSON } from "../graphql/lesson.query";
 import { UPDATE_LESSON } from "../graphql/lesson.mutation";
 import { lessonSchema } from "../validation";
+import { useGetMultipleDataWithDynamicQuery } from "@/common/hooks";
+import { GET_ALL_COURSE } from "../../course/graphql";
+import { convertDataToFormSelectOptions } from "@/common/utils";
 
 const LessonUpdateModal = () => {
   const { modal, setModal } = useModal();
   const { lessonId } = useSaveLessonId();
-
+  const { data:courses } = useGetMultipleDataWithDynamicQuery({ query: GET_ALL_COURSE });
+  const [defaultValues, setDefaultValues] = useState({});
   const { data } = useQuery(GET_LESSON, {
     variables: {
       id: Number(lessonId),
@@ -29,11 +33,11 @@ const LessonUpdateModal = () => {
   });
 
   const [updateLesson, { loading, error }] = useMutation(UPDATE_LESSON, {
-    refetchQueries: ["lessonGetAll"],
+    refetchQueries: ["lessonGetAll", "lessonGet"],
   });
 
   const onSubmit: SubmitHandler<any> = async (data: any) => {
-    data.courseId = 12;
+    data.courseId = Number(data.courseId)
     try {
       const result = await updateLesson({
         variables: {
@@ -59,11 +63,13 @@ const LessonUpdateModal = () => {
     }
   }, [error]);
 
-  const defaultValue = {
-    lesson_title: data?.lessonGet?.lesson_title,
-    lesson_time: data?.lessonGet?.lesson_time,
-    courseId:data?.lessonGet?.courseId,
-  }
+  useEffect(() =>{
+    setDefaultValues({
+      lesson_title: data?.lessonGet?.lesson_title,
+      lesson_time: data?.lessonGet?.lesson_time,
+      courseId:data?.lessonGet?.courseId,
+    })
+  }, [data])
 
   return (
     <DynamicModal
@@ -76,7 +82,7 @@ const LessonUpdateModal = () => {
       <Form
         submitHandler={onSubmit}
         resolver={yupResolver(lessonSchema)}
-        defaultValues={defaultValue}
+        defaultValues={defaultValues}
       >
         <Flex vertical gap="large">
           <FormInput
@@ -95,12 +101,7 @@ const LessonUpdateModal = () => {
           />
           <FormSelectField
             name="courseId"
-            options={[
-              {
-                value: "2",
-                label: "2",
-              },
-            ]}
+            options={convertDataToFormSelectOptions(courses?.courseGetAll?.data)}
             placeholder="Select Course"
             label="Select Course"
             required
