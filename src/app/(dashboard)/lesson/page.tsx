@@ -6,7 +6,7 @@ import { MODAL_ENUMS } from '@/common/constants';
 import DynamicTable from '@/components/ui/DynamicTable';
 import LessonColumnRender from './components/lesson.column';
 import { Button, Card, Flex } from 'antd';
-import LessonUpdateModal from './components/lesson.modal';
+import LessonUpdateModal from './components/update-lesson.modal';
 import LessonAddModal from './components/add-lesson.modal';
 import { useModal } from '@/common/store';
 

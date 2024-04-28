@@ -74,11 +74,6 @@ export const sidebarItems = (role: string) => {
             icon: <ProfileOutlined />,
             children: [
                 {
-                    label: <Link href="/lesson/add-lesson">Add Lesson </Link>,
-                    key: `add-lesson`,
-                },
-                
-                {
                     label: <Link href="/lesson">All Lessons</Link>,
                     key: `lesson-lists`,
                 },
