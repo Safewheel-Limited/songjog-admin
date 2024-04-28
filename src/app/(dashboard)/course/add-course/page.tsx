@@ -8,78 +8,54 @@ import { Button, Flex, message } from "antd";
 import Card from "antd/es/card/Card";
 import Image from "next/image";
 
-import { CARE_PACKAGE_TIME_GET_ALL, GET_CARE_PACKAGE, UPDATE_CARE_PACKAGE } from "../../../graphql";
+// import { CARE_PACKAGE_TIME_GET_ALL, CREATE_CARE_PACKAGE } from "../../graphql";
 import GalleryModal from "@/app/(dashboard)/gallery/components/gallery.modal";
 import { ImageType, useSelectImages } from "@/app/(dashboard)/gallery/store";
-import { BasisItems } from "../../../_constants/select-basis-item.constant";
-import { useGetMultipleDataWithDynamicQuery, useGetSingleDataWithDynamicQuery } from "@/common/hooks";
+// import { BasisItems } from "../../_constants/select-basis-item.constant";
+import { useGetMultipleDataWithDynamicQuery } from "@/common/hooks";
 import FormSelectField from "@/components/Forms/FormSelectField";
 import { convertDataToFormSelectOptions } from "@/common/utils";
 import FormTextArea from "@/components/Forms/FormTextArea";
-import { CreateCarePackageFormValues } from "../../../types";
+// import { CreateCarePackageFormValues } from "../../types";
 import FormInput from "@/components/Forms/FormInput";
 import { MODAL_ENUMS } from "@/common/constants";
 import Form from "@/components/Forms/Form";
 import { useModal } from "@/common/store";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { CARE_PACKAGE_TIME_GET_ALL, CREATE_CARE_PACKAGE } from "../../(carePackages)/graphql";
+import { CreateCarePackageFormValues } from "../../(carePackages)/types";
+import { BasisItems } from "../../(carePackages)/_constants/select-basis-item.constant";
+// import { addCarePackageSchema } from "../../validation";
 
-const EditCarePacakge = ({ params }: { params: { id: string } }) => {
-    const [defaultValues, setDefaultValues] = useState({});
-    const { selectImages, handleSelectImages, resetSelectedImages } = useSelectImages();
+const AddCarePacakge = () => {
     const { data } = useGetMultipleDataWithDynamicQuery({
         query: CARE_PACKAGE_TIME_GET_ALL,
     });
-    const { data: singleCarePackage } = useGetSingleDataWithDynamicQuery({
-        query: GET_CARE_PACKAGE,
-        variables: {
-            id: +params.id
-        }
+
+    const [carePackageCreate, { loading, error }] = useMutation(CREATE_CARE_PACKAGE, {
+        refetchQueries: ["carePackageGetAll"]
     });
-
-    const [carePackageUpdate, { loading, error }] = useMutation(UPDATE_CARE_PACKAGE, {
-        refetchQueries: ["carePackageGetAll", "carePackageGet"]
-    })
-
-    useEffect(() => {
-        if (singleCarePackage?.carePackageGet) {
-            const { carePackageTime } = singleCarePackage?.carePackageGet || {};
-            setDefaultValues(singleCarePackage?.carePackageGet)
-            const converTimeOptions = convertDataToFormSelectOptions(carePackageTime)
-            setDefaultValues((prev) => ({
-                ...prev,
-                carePackageTime: converTimeOptions
-            }))
-
-            singleCarePackage?.carePackageGet.thumbnails?.forEach((item) => (
-                handleSelectImages({ id: item.id, fileUrl: item.fileUrl })
-            ))
-        }
-    }, [singleCarePackage, handleSelectImages])
-
+    const { selectImages, resetSelectedImages } = useSelectImages();
     const { setModal } = useModal();
     const router = useRouter();
-
     const onSubmit: SubmitHandler<CreateCarePackageFormValues> = async (
         data: any
     ) => {
         data.thumbnails = selectImages.map(image => image.id);
         data.price = Number(data.price);
         data.level = Number(data.level);
-        data.carePackageTime = data.carePackageTime && data.carePackageTime.map((item: any) => item.value)
-        delete data.__typename
-        console.log("carePackageTime", data)
+
         try {
-            const res = await carePackageUpdate({
+            const res = await carePackageCreate({
                 variables: {
                     input: data,
                 },
             });
             if (res.data) {
-                message.success("Care package updated successfully");
+                message.success("Care package created successfully");
                 resetSelectedImages();
-                setDefaultValues({})
-                router.push("/care-package/care-package-lists")
+                // router.push("/care-package/care-package-lists")
             }
         } catch (err) {
             message.error(error?.message || "Something want wrong. please try again!");
@@ -109,21 +85,11 @@ const EditCarePacakge = ({ params }: { params: { id: string } }) => {
         </Flex>
     );
 
-    const handleSelect = (_: any, option: any) => {
-
-        // setDefaultValues((prev) => ({
-        //     ...prev,
-        //     carePackageTime: [...prev.carePackageTime, option]
-        // }))
-        console.log("option", option);
-    }
-
-
     return (
         <>
             <Card>
-                <Title level={3}>Update Care Package</Title>
-                <Form defaultValues={defaultValues} submitHandler={onSubmit} >
+                <Title level={3}>Add New Course</Title>
+                <Form submitHandler={onSubmit} >
                     <Flex gap="large" style={{ width: "100%" }} justify="space-between">
                         <Flex vertical gap="large" style={{ flexBasis: "50%" }}>
                             <FormInput
@@ -138,6 +104,11 @@ const EditCarePacakge = ({ params }: { params: { id: string } }) => {
                                 label="Write Description"
                                 placeholder="Write your package description"
                                 rows={5}
+                            />
+                            <FormInput
+                                name="about_course"
+                                label="Write About Course"
+                                placeholder="Write about your course"
                             />
 
                             <FormInput
@@ -155,26 +126,23 @@ const EditCarePacakge = ({ params }: { params: { id: string } }) => {
                                 type="number"
                                 required
                             />
-                            <FormSelectField
-                                name="basis"
-                                options={BasisItems}
-                                placeholder="Select Basis"
-                                label="Select Basis"
+                            <FormInput
+                                name="course_time"
+                                label="Course Time"
+                                placeholder="Write course time"
                                 required
                             />
 
+
                             <FormSelectField
                                 mode="multiple"
-                                name="carePackageTime"
+                                name="lessonsIds"
                                 options={convertDataToFormSelectOptions(
                                     data?.carePackageTimeGetAll.data
                                 )}
-                                placeholder="Select Care Package Time"
-                                label="Select Care Package Time"
+                                placeholder="Select Lessons"
+                                label="Select Lessons"
                                 required
-                                // defaultValue={defaultValues?.carePackageTime}
-                                onSelect={(_, option: any) => handleSelect(_, option)}
-
                             />
                             {showSelectedImage}
                             <Button
@@ -184,6 +152,7 @@ const EditCarePacakge = ({ params }: { params: { id: string } }) => {
                             >
                                 Select Image
                             </Button>
+                            {/* {<small style={{ color: "red" }}>Please select at least a Image</small>} */}
                             <Button
                                 loading={loading}
                                 disabled={loading}
@@ -191,7 +160,7 @@ const EditCarePacakge = ({ params }: { params: { id: string } }) => {
                                 htmlType="submit"
                                 block
                             >
-                                Update Care Package
+                                Create Package
                             </Button>
                         </Flex>
                     </Flex>
@@ -202,4 +171,4 @@ const EditCarePacakge = ({ params }: { params: { id: string } }) => {
     );
 };
 
-export default EditCarePacakge;
+export default AddCarePacakge;
