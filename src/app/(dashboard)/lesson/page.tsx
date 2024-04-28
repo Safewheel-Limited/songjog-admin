@@ -2,21 +2,24 @@
 
 import { useGetMultipleDataWithDynamicQuery } from '@/common/hooks'
 import { GET_ALL_LESSON } from './graphql/lesson.query';
-import { useRouter } from 'next/navigation';
-import { Button, Card, Flex } from 'antd';
+import { MODAL_ENUMS } from '@/common/constants';
 import DynamicTable from '@/components/ui/DynamicTable';
 import LessonColumnRender from './components/lesson.column';
+import { Button, Card, Flex } from 'antd';
 import LessonUpdateModal from './components/lesson.modal';
+import LessonAddModal from './components/add-lesson.modal';
+import { useModal } from '@/common/store';
 
 const LessonListPage = () => {
     const { data, loading, page, onPaginationChange } = useGetMultipleDataWithDynamicQuery({ query: GET_ALL_LESSON });
-    const router = useRouter();
+    const {setModal} = useModal();
     const title = (
         <Flex justify="space-between" align='center'>
             <h2>All Lessons</h2>
-            <Button type="primary" onClick={() => router.push("/lesson/add-lesson")}>Add Lesson</Button>
+            <Button type="primary" onClick={() => setModal(MODAL_ENUMS.OPEN_ADD_LESSON_MODAL)}>Add Lesson</Button>
         </Flex>
     )
+
     return (
         <Card title={title}>
             <DynamicTable
@@ -30,6 +33,7 @@ const LessonListPage = () => {
                 pageSize={page}
             />
             <LessonUpdateModal />
+            <LessonAddModal />
         </Card>
     )
 }

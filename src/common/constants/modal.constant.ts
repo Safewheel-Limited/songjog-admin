@@ -22,5 +22,6 @@ export enum MODAL_ENUMS {
 
   //  modal enums
   OPEN_GALLERY_MODAL = "open_gallery_modal",
-  OPEN_LESSON_MODAL = "open_lesson_modal"
+  OPEN_UPDATE_LESSON_MODAL = "open_update_lesson_modal",
+  OPEN_ADD_LESSON_MODAL = "open_add_lesson_modal"
 }

@@ -1,23 +1,30 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import Form from "@/components/Forms/Form";
-import FormInput from "@/components/Forms/FormInput";
-import FormSelectField from "@/components/Forms/FormSelectField";
+import { Button, Flex, message } from "antd";
+import { SubmitHandler } from "react-hook-form";
 import { useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Card, Flex, message } from "antd";
-import Title from "antd/es/typography/Title";
-import { SubmitHandler } from "react-hook-form";
+
+import DynamicModal from "@/components/ui/DynamicModal";
+import FormInput from "@/components/Forms/FormInput";
+import { MODAL_ENUMS } from "@/common/constants";
+import Form from "@/components/Forms/Form";
+import { useModal } from "@/common/store";
+import FormSelectField from "@/components/Forms/FormSelectField";
 import { CREATE_LESSON } from "../graphql/lesson.mutation";
 import { lessonSchema } from "../validation";
 import { useRouter } from "next/navigation";
 
-const AddLessonPage = () => {
-  const [lessonCreate, {data, loading, error}] = useMutation(CREATE_LESSON);
+const LessonAddModal = () => {
+  const { modal, setModal } = useModal();
+  const [lessonCreate, {loading, error}] = useMutation(CREATE_LESSON, {
+    refetchQueries:["lessonGetAll"]
+  });
   const router = useRouter();
   const onSubmit: SubmitHandler<any> = async (data: any) => {
     try {
-      data.courseId = 13;
+      data.courseId = 11;
     const result = await lessonCreate({
         variables: {
             input: data
@@ -26,7 +33,7 @@ const AddLessonPage = () => {
 
     if (result.data) {
     message.success("Lesson created Successfully.");
-    router.push("/lesson")
+    setModal("")
   };
 
   } catch (err) {
@@ -35,9 +42,14 @@ const AddLessonPage = () => {
   }
 }
   return (
-    <Card style={{marginInline:"150px"}}>
-      <Title level={3}>Add Lesson</Title>
-      <Form
+    <DynamicModal
+      title="Add Lesson"
+      isOpen={modal === MODAL_ENUMS.OPEN_ADD_LESSON_MODAL}
+      closeModal={() => setModal("")}
+      showCancelButton
+      footer={false}
+    >
+       <Form
         submitHandler={onSubmit}
       resolver={yupResolver(lessonSchema)}
       >
@@ -76,7 +88,8 @@ const AddLessonPage = () => {
           </Button>
         </Flex>
       </Form>
-    </Card>
+    </DynamicModal>
   );
 };
-export default AddLessonPage;
+
+export default LessonAddModal;

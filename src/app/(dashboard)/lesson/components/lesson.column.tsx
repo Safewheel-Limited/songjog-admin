@@ -32,7 +32,7 @@ const LessonColumnRender = () => {
 
   const handleUpdateLesson = (id: number | string) => {
     setLessonId(id);
-    setModal(MODAL_ENUMS.OPEN_LESSON_MODAL);
+    setModal(MODAL_ENUMS.OPEN_UPDATE_LESSON_MODAL);
   };
   
   const columns = [

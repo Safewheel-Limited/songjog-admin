@@ -68,7 +68,7 @@ const LessonUpdateModal = () => {
   return (
     <DynamicModal
       title="Update Lesson"
-      isOpen={modal === MODAL_ENUMS.OPEN_LESSON_MODAL}
+      isOpen={modal === MODAL_ENUMS.OPEN_UPDATE_LESSON_MODAL}
       closeModal={() => setModal("")}
       showCancelButton
       footer={false}
