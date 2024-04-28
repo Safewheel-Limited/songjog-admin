@@ -39,7 +39,7 @@ const CreateCarePackageTime = () => {
     }, [error])
 
     return (
-        <Card>
+        <Card style={{marginInline:"150px"}}>
             <Title level={3}>Create Care Package Time</Title>
             <Form submitHandler={onSubmit} resolver={yupResolver(carePackageTimeSchema)}>
                 <Flex vertical gap="large">
