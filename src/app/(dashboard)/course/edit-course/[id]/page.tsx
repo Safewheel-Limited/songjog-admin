@@ -10,8 +10,7 @@ import Image from "next/image";
 
 import GalleryModal from "@/app/(dashboard)/gallery/components/gallery.modal";
 import { ImageType, useSelectImages } from "@/app/(dashboard)/gallery/store";
-import { useGetMultipleDataWithDynamicQuery, useGetSingleDataWithDynamicQuery } from "@/common/hooks";
-import FormSelectField from "@/components/Forms/FormSelectField";
+import { useGetSingleDataWithDynamicQuery } from "@/common/hooks";
 import FormTextArea from "@/components/Forms/FormTextArea";
 import FormInput from "@/components/Forms/FormInput";
 import { MODAL_ENUMS } from "@/common/constants";
@@ -21,8 +20,10 @@ import { useRouter } from "next/navigation";
 
 import { CreateCourseFormValues } from "../../types";
 import { GET_COURSE, UPDATE_COURSE } from "../../graphql";
-import { CARE_PACKAGE_TIME_GET_ALL } from "@/app/(dashboard)/(carePackages)/graphql";
 import { useEffect, useState } from "react";
+import CourseSelectFieldWithOptionsData from "../../_component/CourseSelectFieldWithOptionsData";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { courseUpdateSchema } from "../../validation";
 
 const EditCourse = ({ params }: { params: { id: string } }) => {
 
@@ -31,9 +32,6 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
     const { setModal } = useModal();
     const router = useRouter();
 
-    const { data } = useGetMultipleDataWithDynamicQuery({
-        query: CARE_PACKAGE_TIME_GET_ALL,
-    });
 
     const { data: singleCourse } = useGetSingleDataWithDynamicQuery({
         query: GET_COURSE,
@@ -45,29 +43,34 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
     useEffect(() => {
         if (singleCourse) {
             const { title, about_course, course_time, thumbnails, levelId, price, description, lesson } = singleCourse?.courseGet;
+            const modifyLesson = lesson?.map((lsn: { id: number }) => lsn.id);
             setDefaultValues({
-                title, about_course, course_time, thumbnailsIds: thumbnails, levelId, price, description, lessonIds: lesson
+                title, about_course, course_time, thumbnailsIds: thumbnails, levelId, price, description, lessonIds: modifyLesson
             });
 
-            thumbnails.forEach((item) => (
+            thumbnails.forEach((item: any) => (
                 handleSelectImages({ id: item.id, fileUrl: item.fileUrl })
             ))
         }
     }, [singleCourse, handleSelectImages])
 
 
-    const [updateCourse, { data: courseData, loading, error }] = useMutation(UPDATE_COURSE, {
-        refetchQueries: ["getCourse"]
+    const [updateCourse, { loading, error }] = useMutation(UPDATE_COURSE, {
+        refetchQueries: ["getCourse", "courseGetAll"]
     });
 
     const onSubmit: SubmitHandler<CreateCourseFormValues> = async (
-        data: CreateCourseFormValues
+        data: any
     ) => {
+
+        data.id = +params.id;
         data.thumbnailsIds = selectImages.map(image => image.id);
-        data.lessonIds = [];
         data.price = Number(data.price);
         data.levelId = Number(data.levelId);
         data.authorId = "f5d89311-153f-47aa-976b-0b2313e45823";
+
+        console.log("data", data);
+
         try {
             const res = await updateCourse({
                 variables: {
@@ -75,7 +78,7 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
                 },
             });
             if (res.data) {
-                message.success("Course created successfully");
+                message.success("Course updated successfully");
                 resetSelectedImages();
                 router.push("/course/course-lists");
             }
@@ -107,13 +110,11 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
         </Flex>
     );
 
-    console.log("data", data);
-
     return (
         <>
             <Card>
-                <Title level={3}>Add New Course</Title>
-                <Form submitHandler={onSubmit} defaultValues={defaultValues}>
+                <Title level={3}>Edit {defaultValues?.title} Course</Title>
+                <Form submitHandler={onSubmit} defaultValues={defaultValues} resolver={yupResolver(courseUpdateSchema)}>
                     <Flex gap="large" style={{ width: "100%" }} justify="space-between">
                         <Flex vertical gap="large" style={{ flexBasis: "50%" }}>
                             <FormInput
@@ -157,19 +158,7 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
                                 required
                             />
 
-                            <FormSelectField
-                                mode="multiple"
-                                name="lessonIds"
-                                options={[
-                                    { value: "1", label: "lesson 1" },
-                                    { value: "2", label: "lesson 2" },
-                                    { value: "3", label: "lesson 3" },
-                                    { value: "4", label: "lesson 4" },
-                                ]}
-                                placeholder="Select Lessons"
-                                label="Select Lessons"
-                                required
-                            />
+                            <CourseSelectFieldWithOptionsData />
                             {showSelectedImage}
                             <Button
                                 type="default"

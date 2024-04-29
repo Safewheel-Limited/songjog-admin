@@ -12,9 +12,6 @@ import Image from "next/image";
 import GalleryModal from "@/app/(dashboard)/gallery/components/gallery.modal";
 import { ImageType, useSelectImages } from "@/app/(dashboard)/gallery/store";
 
-import { useGetMultipleDataWithDynamicQuery } from "@/common/hooks";
-import FormSelectField from "@/components/Forms/FormSelectField";
-import { convertDataToFormSelectOptions } from "@/common/utils";
 import FormTextArea from "@/components/Forms/FormTextArea";
 
 import FormInput from "@/components/Forms/FormInput";
@@ -23,16 +20,14 @@ import Form from "@/components/Forms/Form";
 import { useModal } from "@/common/store";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CARE_PACKAGE_TIME_GET_ALL, CREATE_CARE_PACKAGE } from "../../(carePackages)/graphql";
 import { CreateCourseFormValues } from "../types";
 import { CREATE_COURSE } from "../graphql";
+import CourseSelectFieldWithOptionsData from "../_component/CourseSelectFieldWithOptionsData";
+import { courseSchema } from "../validation";
+
 
 
 const AddCourse = () => {
-    const { data } = useGetMultipleDataWithDynamicQuery({
-        query: CARE_PACKAGE_TIME_GET_ALL,
-    });
-
     const [courseCreate, { loading, error }] = useMutation(CREATE_COURSE, {
         refetchQueries: ["courseGetAll"]
     });
@@ -43,7 +38,6 @@ const AddCourse = () => {
         data: CreateCourseFormValues
     ) => {
         data.thumbnailsIds = selectImages.map(image => image.id);
-        data.lessonIds = [];
         data.price = Number(data.price);
         data.levelId = Number(data.levelId);
         data.authorId = "f5d89311-153f-47aa-976b-0b2313e45823";
@@ -86,13 +80,12 @@ const AddCourse = () => {
         </Flex>
     );
 
-    // console.log("courseData", courseData);
 
     return (
         <>
             <Card>
                 <Title level={3}>Add New Course</Title>
-                <Form submitHandler={onSubmit} >
+                <Form submitHandler={onSubmit} resolver={yupResolver(courseSchema)}>
                     <Flex gap="large" style={{ width: "100%" }} justify="space-between">
                         <Flex vertical gap="large" style={{ flexBasis: "50%" }}>
                             <FormInput
@@ -136,19 +129,7 @@ const AddCourse = () => {
                                 required
                             />
 
-                            <FormSelectField
-                                mode="multiple"
-                                name="lessonIds"
-                                options={[
-                                    { value: "1", label: "lesson 1" },
-                                    { value: "2", label: "lesson 2" },
-                                    { value: "3", label: "lesson 3" },
-                                    { value: "4", label: "lesson 4" },
-                                ]}
-                                placeholder="Select Lessons"
-                                label="Select Lessons"
-                                required
-                            />
+                            <CourseSelectFieldWithOptionsData />
                             {showSelectedImage}
                             <Button
                                 type="default"
