@@ -64,7 +64,7 @@ const GalleryModal = () => {
                     <Pagination
                         current={page}
                         pageSize={limit}
-                        total={data?.galleryGetAll.pagination.total}
+                        total={data?.galleryGetAll?.pagination.total}
                         onChange={onPaginationChange}
                     />
                 </div>

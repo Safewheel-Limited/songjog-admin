@@ -69,6 +69,17 @@ export const sidebarItems = (role: string) => {
             ],
         },
         {
+            label: "Gallery",
+            key: "gallery",
+            icon: <ProfileOutlined />,
+            children: [
+                {
+                    label: <Link href="/gallery">All Gallery</Link>,
+                    key: `gallery-lists`,
+                },
+            ],
+        },
+        {
             label: "Lessons",
             key: "lessons",
             icon: <ProfileOutlined />,
@@ -118,6 +129,18 @@ export const sidebarItems = (role: string) => {
                 {
                     label: <Link href="/review">All Reviews</Link>,
                     key: `review-lists`,
+                },
+
+            ],
+        },
+        {
+            label: "Level",
+            key: "Level",
+            icon: <ProfileOutlined />,
+            children: [
+                {
+                    label: <Link href="/level">All Level</Link>,
+                    key: `level-lists`,
                 },
 
             ],
