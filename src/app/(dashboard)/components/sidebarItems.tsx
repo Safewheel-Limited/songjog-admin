@@ -95,6 +95,33 @@ export const sidebarItems = (role: string) => {
                 },
             ],
         },
+        {
+            label: "Lesson Items",
+            key: "lesson-items",
+            icon: <ProfileOutlined />,
+            children: [
+                {
+                    label: <Link href="/lesson-items">Lesson Items List</Link>,
+                    key: `lesson-items-list`,
+                },
+                {
+                    label: <Link href="/lesson-items/add-lesson-item">Add Lesson Item</Link>,
+                    key: `add-lesson-item`,
+                },
+            ],
+        },
+        {
+            label: "Review",
+            key: "Review",
+            icon: <ProfileOutlined />,
+            children: [
+                {
+                    label: <Link href="/review">All Reviews</Link>,
+                    key: `review-lists`,
+                },
+
+            ],
+        },
 
     ];
 
