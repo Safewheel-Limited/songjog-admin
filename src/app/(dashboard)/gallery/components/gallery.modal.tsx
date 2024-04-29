@@ -1,19 +1,35 @@
 import { useGetMultipleDataWithDynamicQuery } from "@/common/hooks";
-import React from "react";
+import React, { FC } from "react";
 import { GALLERY_GET_ALL } from "../graphql/gallery.query";
 import DynamicModal from "@/components/ui/DynamicModal";
 import { useModal } from "@/common/store";
 import { MODAL_ENUMS } from "@/common/constants";
-import { Button, Flex, Pagination } from "antd";
+import { Button, Flex, Pagination, message } from "antd";
 import Image from "next/image";
 import { useSelectImages } from "../store";
 import GallerySkeleton from "./gallery.skeleton";
 
-const GalleryModal = () => {
-    const { data, limit, loading, page, onPaginationChange } =
+
+type PropType = {
+    isSingleSelect?: boolean;
+}
+
+const GalleryModal: FC<PropType> = ({ isSingleSelect }) => {
+
+    const { data, limit, loading, page, onPaginationChange
+    } =
         useGetMultipleDataWithDynamicQuery({ query: GALLERY_GET_ALL });
     const { modal, setModal } = useModal();
-    const { selectImages, handleSelectImages } = useSelectImages();
+    const { selectImages, handleSelectImages, resetSelectedImages } = useSelectImages();
+
+    const handleSelectImage = (item: any) => {
+        if (isSingleSelect) {
+            resetSelectedImages();
+            handleSelectImages({ id: item.id, fileUrl: item.fileUrl })
+        } else {
+            handleSelectImages({ id: item.id, fileUrl: item.fileUrl })
+        }
+    }
     return (
         <DynamicModal
             title="Images"
@@ -36,7 +52,7 @@ const GalleryModal = () => {
                                 <GallerySkeleton key={idx} />
                             ))
                             : !loading &&
-                            data?.galleryGetAll?.data.map((item: any) => (
+                            (data as any)?.galleryGetAll?.data.map((item: any) => (
                                 <Image
                                     src={item.fileUrl}
                                     alt={item.name}
@@ -48,7 +64,7 @@ const GalleryModal = () => {
                                     objectFit="cover"
                                     objectPosition="top center"
                                     key={item.id}
-                                    onClick={() => handleSelectImages({ id: item.id, fileUrl: item.fileUrl })}
+                                    onClick={() => handleSelectImage(item)}
                                     style={{
                                         cursor: "pointer",
                                         borderRadius: "10px",
@@ -64,7 +80,7 @@ const GalleryModal = () => {
                     <Pagination
                         current={page}
                         pageSize={limit}
-                        total={data?.galleryGetAll?.pagination.total}
+                        total={(data as any)?.galleryGetAll?.pagination.total}
                         onChange={onPaginationChange}
                     />
                 </div>

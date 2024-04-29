@@ -22,12 +22,12 @@ const LevelList: React.FC = () => {
         <Card title={title}>
             <DynamicTable
                 columns={LevelColumnRender()}
-                dataSource={data?.levelGetAll?.data}
+                dataSource={(data as any)?.levelGetAll?.data}
                 loading={loading}
                 showSizeChanger={true}
                 onPaginationChange={onPaginationChange}
                 showPagination={true}
-                totalPages={data?.roleAccessGetAll?.pagination?.total}
+                totalPages={(data as any)?.levelGetAll?.pagination?.total}
                 pageSize={page}
             />
             {/* <PackageTimeUpdateModal /> */}

@@ -1,40 +1,62 @@
 "use client";
 
-import { UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined, CloseOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Card, Flex, message } from "antd";
+import { Button, Card, Flex, Select, message } from "antd";
 import { SubmitHandler } from "react-hook-form";
 import Title from "antd/es/typography/Title";
 import { useMutation } from "@apollo/client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import FormInput from "@/components/Forms/FormInput";
 import Form from "@/components/Forms/Form";
-import { CREATE_LEVEL } from "../graphql";
 import { useModal } from "@/common/store";
-import { ImageType, useSelectImages } from "../../gallery/store";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { MODAL_ENUMS } from "@/common/constants";
-import GalleryModal from "../../gallery/components/gallery.modal";
-import { levelSchema } from "../validation";
+import { ImageType, useSelectImages } from "@/app/(dashboard)/gallery/store";
+import { GET_LEVEL, UPDATE_LEVEL } from "../../graphql";
+import { useGetMultipleDataWithDynamicQuery, useGetSingleDataWithDynamicQuery } from "@/common/hooks";
+import GalleryModal from "@/app/(dashboard)/gallery/components/gallery.modal";
+import { GALLERY_GET_ALL } from "@/app/(dashboard)/gallery/graphql/gallery.query";
+import { levelSchema } from "../../validation";
 
-const CreateLevel = () => {
-    const { selectImages, resetSelectedImages } = useSelectImages();
-    const { setModal } = useModal();
-    const router = useRouter();
-    const [levelCreate, { loading }] = useMutation(CREATE_LEVEL, {
-        refetchQueries: ["levelGetAll"]
+const EditLevel = ({ params }: { params: { id: string } }) => {
+    const { data: galleryImages } = useGetMultipleDataWithDynamicQuery({ query: GALLERY_GET_ALL });
+    const { data: singleLevel } = useGetSingleDataWithDynamicQuery({
+        query: GET_LEVEL,
+        variables: {
+            id: +params.id
+        }
     });
+
+    const { selectImages, resetSelectedImages, handleSelectImages } = useSelectImages();
+    const { setModal } = useModal();
+    const [defaultValues, setDefaultValues] = useState<any>({});
+    const router = useRouter();
+    const [levelUpdate, { loading }] = useMutation(UPDATE_LEVEL, {
+        refetchQueries: ["levelGetAll", "levelGet"]
+    });
+
 
     useEffect(() => {
         resetSelectedImages();
     }, [])
 
+    useEffect(() => {
+        if ((singleLevel as any)?.levelGet) {
+            const { levelTitle, galleryId } = (singleLevel as any)?.levelGet;
+            setDefaultValues({ levelTitle });
+            const defaultImage = (galleryImages as any)?.galleryGetAll?.data.find((image: any) => image.id == galleryId);
+            handleSelectImages({ id: defaultImage?.id, fileUrl: defaultImage?.fileUrl })
+        }
+    }, [singleLevel, handleSelectImages, galleryImages])
+
     const onSubmit: SubmitHandler<any> = async (data: any) => {
         data.galleryId = Number(selectImages.map((item) => item.id).pop());
+        data.id = +params.id;
         try {
-            const result = await levelCreate({
+            const result = await levelUpdate({
                 variables: {
                     input: data
                 }
@@ -42,7 +64,7 @@ const CreateLevel = () => {
 
             if (result.data) {
                 resetSelectedImages();
-                message.success("Level created Successfully.")
+                message.success("Level updated Successfully.")
                 router.push("/level");
             }
 
@@ -80,8 +102,8 @@ const CreateLevel = () => {
 
     return (
         <Card style={{ marginInline: "150px" }}>
-            <Title level={3}>Create New Level</Title>
-            <Form submitHandler={onSubmit} resolver={yupResolver(levelSchema)}>
+            <Title level={3}>Update Level</Title>
+            <Form submitHandler={onSubmit} defaultValues={defaultValues} resolver={yupResolver(levelSchema)}>
                 <Flex vertical gap="large">
                     <FormInput
                         name="levelTitle"
@@ -90,7 +112,6 @@ const CreateLevel = () => {
                         placeholder="Enter Your Title"
                         type="text"
                     />
-
 
                     {showSelectedImage}
                     <Button
@@ -109,7 +130,7 @@ const CreateLevel = () => {
                         htmlType="submit"
                         block
                     >
-                        Create New Level
+                        Update Level
                     </Button>
                 </Flex>
             </Form>
@@ -118,5 +139,5 @@ const CreateLevel = () => {
     );
 };
 
-export default CreateLevel;
+export default EditLevel;
 

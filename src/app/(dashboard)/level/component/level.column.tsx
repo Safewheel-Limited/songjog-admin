@@ -5,10 +5,10 @@ import { KeyEnum, MODAL_ENUMS } from "@/common/constants";
 import { useMutation } from "@apollo/client";
 import { useModal } from "@/common/store";
 import { DELETE_LEVEL } from "../graphql";
+import { useRouter } from "next/navigation";
 
 const LevelColumnRender = () => {
-    // const { setLessonId } = useSaveLessonId();
-    const { setModal } = useModal();
+    const router = useRouter();
     const [levelDelete, { loading }] = useMutation(DELETE_LEVEL, {
         refetchQueries: ["levelGetAll"],
     });
@@ -21,7 +21,7 @@ const LevelColumnRender = () => {
         })
             .then((res) => {
                 if (res.data) {
-                    message.success("level deleted Successful");
+                    message.success("Level deleted Successful");
                 }
             })
             .catch((err) => {
@@ -29,10 +29,6 @@ const LevelColumnRender = () => {
             });
     };
 
-    const handleUpdateLevel = (id: number | string) => {
-        // setLessonId(id);
-        setModal(MODAL_ENUMS.OPEN_UPDATE_LESSON_MODAL);
-    };
 
     const columns = [
         {
@@ -50,7 +46,6 @@ const LevelColumnRender = () => {
             dataIndex: "createdAt",
             key: "createdAt",
             render: (_: any, data: any) => {
-                console.log("data", data);
                 return (
                     <>
                         {new Date(data?.createdAt?.toString()).toLocaleString(undefined, {
@@ -86,7 +81,7 @@ const LevelColumnRender = () => {
                             type="primary"
                             icon={<EditOutlined />}
                             style={{ background: "#4682A9" }}
-                            onClick={() => handleUpdateLevel(data.id)}
+                            onClick={() => router.push(`/level/edit-level/${data.id}`)}
                         />
                         <Popconfirm
                             title="Are you sure ?"
