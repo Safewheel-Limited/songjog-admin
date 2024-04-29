@@ -20,7 +20,7 @@ const CourseColumnRenderer = () => {
       }
     }).then(res => {
       if (res.data) {
-        message.success("Care package deleted Successful")
+        message.success("Course deleted Successful")
       }
     }).catch(err => {
       message.error(err.message);

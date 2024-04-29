@@ -8,8 +8,8 @@ interface UsePackageTimeQueryProps {
   initialLimit?: number;
 }
 
-interface UsePackageTimeQueryResult {
-  data: any;
+interface UsePackageTimeQueryResult<T> {
+  data: T;
   loading: boolean;
   refetch: () => void;
   page: number;
@@ -17,12 +17,12 @@ interface UsePackageTimeQueryResult {
   onPaginationChange: (current: number, pageSize: number) => void;
 }
 
-export const useGetMultipleDataWithDynamicQuery = ({
+export const useGetMultipleDataWithDynamicQuery = <T>({
   query,
   variables,
   initialPage = 1,
   initialLimit = 10,
-}: UsePackageTimeQueryProps): UsePackageTimeQueryResult => {
+}: UsePackageTimeQueryProps): UsePackageTimeQueryResult<T> => {
   const [page, setPage] = useState<number>(initialPage);
   const [limit, setLimit] = useState<number>(initialLimit);
 
