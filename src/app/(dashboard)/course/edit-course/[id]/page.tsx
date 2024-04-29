@@ -18,10 +18,12 @@ import Form from "@/components/Forms/Form";
 import { useModal } from "@/common/store";
 import { useRouter } from "next/navigation";
 
-import { CreateCourseFormValues, UpdateCourseFormValues } from "../../types";
+import { CreateCourseFormValues } from "../../types";
 import { GET_COURSE, UPDATE_COURSE } from "../../graphql";
 import { useEffect, useState } from "react";
 import CourseSelectFieldWithOptionsData from "../../_component/CourseSelectFieldWithOptionsData";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { courseUpdateSchema } from "../../validation";
 
 const EditCourse = ({ params }: { params: { id: string } }) => {
 
@@ -46,7 +48,7 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
                 title, about_course, course_time, thumbnailsIds: thumbnails, levelId, price, description, lessonIds: modifyLesson
             });
 
-            thumbnails.forEach((item) => (
+            thumbnails.forEach((item: any) => (
                 handleSelectImages({ id: item.id, fileUrl: item.fileUrl })
             ))
         }
@@ -112,7 +114,7 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
         <>
             <Card>
                 <Title level={3}>Edit {defaultValues?.title} Course</Title>
-                <Form submitHandler={onSubmit} defaultValues={defaultValues}>
+                <Form submitHandler={onSubmit} defaultValues={defaultValues} resolver={yupResolver(courseUpdateSchema)}>
                     <Flex gap="large" style={{ width: "100%" }} justify="space-between">
                         <Flex vertical gap="large" style={{ flexBasis: "50%" }}>
                             <FormInput

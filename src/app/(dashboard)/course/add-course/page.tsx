@@ -12,9 +12,6 @@ import Image from "next/image";
 import GalleryModal from "@/app/(dashboard)/gallery/components/gallery.modal";
 import { ImageType, useSelectImages } from "@/app/(dashboard)/gallery/store";
 
-import { useGetMultipleDataWithDynamicQuery } from "@/common/hooks";
-import FormSelectField from "@/components/Forms/FormSelectField";
-import { convertDataToFormSelectOptions } from "@/common/utils";
 import FormTextArea from "@/components/Forms/FormTextArea";
 
 import FormInput from "@/components/Forms/FormInput";
@@ -26,6 +23,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { CreateCourseFormValues } from "../types";
 import { CREATE_COURSE } from "../graphql";
 import CourseSelectFieldWithOptionsData from "../_component/CourseSelectFieldWithOptionsData";
+import { courseSchema } from "../validation";
 
 
 
@@ -87,7 +85,7 @@ const AddCourse = () => {
         <>
             <Card>
                 <Title level={3}>Add New Course</Title>
-                <Form submitHandler={onSubmit} >
+                <Form submitHandler={onSubmit} resolver={yupResolver(courseSchema)}>
                     <Flex gap="large" style={{ width: "100%" }} justify="space-between">
                         <Flex vertical gap="large" style={{ flexBasis: "50%" }}>
                             <FormInput
