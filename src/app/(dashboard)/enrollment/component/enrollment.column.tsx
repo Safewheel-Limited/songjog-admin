@@ -14,14 +14,14 @@ const EnrollmentColumnRenderer = () => {
     refetchQueries: ["enrollmentGetAll", "enrollmentGet"],
   });
 
-  const handleDeleteCourse = (id: string | number) => {
+  const handleDeleteEnrollment = (id: string | number) => {
     enrollmentDelete({
       variables: {
         id: Number(id)
       }
     }).then(res => {
       if (res.data) {
-        message.success("Course deleted Successful")
+        message.success("enrollment deleted Successful")
       }
     }).catch(err => {
       message.error(err.message);
@@ -35,17 +35,38 @@ const EnrollmentColumnRenderer = () => {
       key: "id",
     },
     {
-      title: "Course Time",
-      dataIndex: "course_time",
-      key: "course_time",
+      title: "User Name",
+      dataIndex: "user_name",
+      key: "user_name",
+      render: (_: any, data: any) => (
+        <>
+          {data?.user?.fullName}
+        </>
+      )
     },
     {
-      title: "Author",
-      dataIndex: "author",
-      key: "author",
-      render: (_: any, data: any) => {
-        return <p>{data.author.fullName}</p>
-      }
+      title: "createdAt",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (_: any, data: any) => (
+        <p>
+          {new Date(data?.createdAt?.toString()).toLocaleString(undefined, {
+            hour12: true,
+          })}
+        </p>
+      ),
+    },
+    {
+      title: "updatedAt",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      render: (_: any, data: any) => (
+        <p>
+          {new Date(data?.updatedAt?.toString()).toLocaleString(undefined, {
+            hour12: true,
+          })}
+        </p>
+      ),
     },
 
     {
@@ -54,21 +75,13 @@ const EnrollmentColumnRenderer = () => {
       key: "actions",
       // width: 120,
       render: (_: any, data: any) => {
-        console.log("data", data);
         return (
           //   <Permission>
           <Space>
-            <Button
-              key={KeyEnum.ROLE_ACCESS_UPDATE}
-              type="primary"
-              icon={<EditOutlined />}
-              style={{ background: "#4682A9" }}
-              onClick={() => router.push(`/course/edit-course/${data.id}`)}
-            />
             <Popconfirm
               title="Are you sure ?"
               description="Are you sure to delete this Role"
-              onConfirm={() => handleDeleteCourse(data.id)}
+              onConfirm={() => handleDeleteEnrollment(data.id)}
               okText="Yes"
               cancelText="No"
               disabled={loading}
@@ -80,9 +93,7 @@ const EnrollmentColumnRenderer = () => {
         );
       },
     },
-
   ];
-
   return columns;
 };
 
