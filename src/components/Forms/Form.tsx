@@ -20,7 +20,6 @@ const Form = ({
     resolver,
 }: FormProps) => {
     const formConfig: FormConfig = {};
-
     if (!!defaultValues) formConfig["defaultValues"] = defaultValues;
     if (!!resolver) formConfig["resolver"] = resolver;
     const methods = useForm<FormProps>(formConfig);
