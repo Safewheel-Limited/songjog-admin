@@ -9,9 +9,16 @@ export const GET_ALL_ENROLLMENT = gql`
       paginationQuery: $paginationQuery
       filterQuery: $filterQuery
     ) {
-      id
-      userId
-      courseId
+      message
+      status
+      data {
+        id
+        user {
+          fullName
+        }
+        createdAt
+        updatedAt
+      }
     }
   }
 `;

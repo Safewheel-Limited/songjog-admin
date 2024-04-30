@@ -11,7 +11,6 @@ import { GET_ALL_ENROLLMENT } from './graphql';
 const EnrollementList = () => {
     const { data, loading, page, onPaginationChange } = useGetMultipleDataWithDynamicQuery({ query: GET_ALL_ENROLLMENT });
 
-    console.log("data", data);
     const router = useRouter();
     const title = (
         <Flex justify="space-between" align='center'>
@@ -23,12 +22,12 @@ const EnrollementList = () => {
         <Card title={title}>
             <DynamicTable
                 columns={EnrollmentColumnRenderer()}
-                dataSource={(data as any)?.courseGetAll?.data}
+                dataSource={(data as any)?.enrollmentGetAll?.data}
                 loading={loading}
                 showSizeChanger={true}
                 onPaginationChange={onPaginationChange}
                 showPagination={true}
-                totalPages={(data as any)?.courseGetAll?.pagination?.total}
+                totalPages={(data as any)?.enrollmentGetAll?.pagination?.total}
                 pageSize={page}
             />
         </Card>
