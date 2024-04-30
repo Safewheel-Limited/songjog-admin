@@ -7,6 +7,7 @@ import { ApolloWrapper } from "@/providers";
 
 // import styles
 import "./globals.css";
+import "react-quill/dist/quill.snow.css";
 
 const inter = Inter({ subsets: ["latin"] });
 

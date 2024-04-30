@@ -25,8 +25,6 @@ import { CREATE_COURSE } from "../graphql";
 import CourseSelectFieldWithOptionsData from "../_component/CourseSelectFieldWithOptionsData";
 import { courseSchema } from "../validation";
 
-
-
 const AddCourse = () => {
     const [courseCreate, { loading, error }] = useMutation(CREATE_COURSE, {
         refetchQueries: ["courseGetAll"]
