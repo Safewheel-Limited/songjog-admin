@@ -21,12 +21,12 @@ const CourseLists = () => {
     <Card title={title}>
       <DynamicTable
         columns={CourseColumnRenderer()}
-        dataSource={data?.courseGetAll?.data}
+        dataSource={(data as any)?.courseGetAll?.data}
         loading={loading}
         showSizeChanger={true}
         onPaginationChange={onPaginationChange}
         showPagination={true}
-        totalPages={data?.courseGetAll?.pagination?.total}
+        totalPages={(data as any)?.courseGetAll?.pagination?.total}
         pageSize={page}
       />
     </Card>

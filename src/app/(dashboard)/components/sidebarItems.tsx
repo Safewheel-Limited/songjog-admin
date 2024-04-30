@@ -145,6 +145,18 @@ export const sidebarItems = (role: string) => {
 
             ],
         },
+        {
+            label: "Enrollment",
+            key: "enrollment",
+            icon: <ProfileOutlined />,
+            children: [
+                {
+                    label: <Link href="/enrollment">All Enrollment</Link>,
+                    key: `enrollment-lists`,
+                },
+
+            ],
+        },
 
     ];
 

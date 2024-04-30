@@ -24,12 +24,12 @@ const LessonListPage = () => {
         <Card title={title}>
             <DynamicTable
                 columns={ReviewColumnRenderer()}
-                dataSource={data?.reviewGetAll?.data}
+                dataSource={(data as any)?.reviewGetAll?.data}
                 loading={loading}
                 showSizeChanger={true}
                 onPaginationChange={onPaginationChange}
                 showPagination={true}
-                totalPages={data?.reviewGetAll?.pagination?.total}
+                totalPages={(data as any)?.reviewGetAll?.pagination?.total}
                 pageSize={page}
             />
             <ReviewUpdateModal />
