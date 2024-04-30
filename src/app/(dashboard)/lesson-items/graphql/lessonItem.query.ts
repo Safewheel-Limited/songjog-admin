@@ -16,7 +16,7 @@ export const GET_ALL_LESSON_ITEMS = gql`
       }
       data {
         id
-        lessonId
+        # lessonId
         title
         description
         time
