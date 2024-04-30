@@ -26,4 +26,6 @@ export enum MODAL_ENUMS {
   OPEN_ADD_LESSON_MODAL = "open_add_lesson_modal",
   OPEN_ADD_REVIEW_MODAL = "open_add_review_modal",
   OPEN_UPDATE_REVIEW_MODAL = "open_update_review_modal",
+  OPEN_ADD_BLOG_CATEGORY_MODAL = "open_add_blog_category_modal",
+  OPEN_UPDATE_BLOG_CATEGORY_MODAL = "open_update_blog_category_modal",
 }

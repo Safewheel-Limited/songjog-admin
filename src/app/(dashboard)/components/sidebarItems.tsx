@@ -146,6 +146,18 @@ export const sidebarItems = (role: string) => {
             ],
         },
         {
+            label: "Blog Category",
+            key: "blog-category",
+            icon: <ProfileOutlined />,
+            children: [
+                {
+                    label: <Link href="/blog-category">All Blog Categories</Link>,
+                    key: `blog-category-lists`,
+                },
+
+            ],
+        },
+        {
             label: "Enrollment",
             key: "enrollment",
             icon: <ProfileOutlined />,
