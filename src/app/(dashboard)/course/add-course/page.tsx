@@ -22,8 +22,9 @@ import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CreateCourseFormValues } from "../types";
 import { CREATE_COURSE } from "../graphql";
-import CourseSelectFieldWithOptionsData from "../_component/CourseSelectFieldWithOptionsData";
-import { courseSchema } from "../validation";
+import LessonSelectField from "../_component/lessonSelectField";
+import { courseCreateSchema } from "../validation";
+import UserSelectField from "../_component/userSelect.Field";
 
 const AddCourse = () => {
     const [courseCreate, { loading, error }] = useMutation(CREATE_COURSE, {
@@ -32,13 +33,13 @@ const AddCourse = () => {
     const { selectImages, resetSelectedImages } = useSelectImages();
     const { setModal } = useModal();
     const router = useRouter();
-    const onSubmit: SubmitHandler<CreateCourseFormValues> = async (
-        data: CreateCourseFormValues
+    const onSubmit: SubmitHandler<any> = async (
+        data: any
     ) => {
+        // console.log("data", data);
         data.thumbnailsIds = selectImages.map(image => image.id);
         data.price = Number(data.price);
         data.levelId = Number(data.levelId);
-        data.authorId = "f5d89311-153f-47aa-976b-0b2313e45823";
         try {
             const res = await courseCreate({
                 variables: {
@@ -83,7 +84,7 @@ const AddCourse = () => {
         <>
             <Card>
                 <Title level={3}>Add New Course</Title>
-                <Form submitHandler={onSubmit} resolver={yupResolver(courseSchema)}>
+                <Form submitHandler={onSubmit} resolver={yupResolver(courseCreateSchema)}>
                     <Flex gap="large" style={{ width: "100%" }} justify="space-between">
                         <Flex vertical gap="large" style={{ flexBasis: "50%" }}>
                             <FormInput
@@ -127,7 +128,8 @@ const AddCourse = () => {
                                 required
                             />
 
-                            <CourseSelectFieldWithOptionsData />
+                            <UserSelectField />
+                            <LessonSelectField />
                             {showSelectedImage}
                             <Button
                                 type="default"
