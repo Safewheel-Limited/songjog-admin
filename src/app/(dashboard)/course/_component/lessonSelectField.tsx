@@ -4,21 +4,21 @@ import FormSelectField from '@/components/Forms/FormSelectField'
 import React, { useEffect, useState } from 'react'
 import { GET_ALL_LESSON } from '../../lesson/graphql/lesson.query';
 
-const CourseSelectFieldWithOptionsData = () => {
+const LessonSelectField = () => {
     const [options, SetOptions] = useState([]);
     const { data } = useGetMultipleDataWithDynamicQuery({
         query: GET_ALL_LESSON,
     });
 
     useEffect(() => {
-        if (data?.lessonGetAll?.data?.length) {
-            const modifyOptions = data?.lessonGetAll?.data?.map((lesson: any) => ({
+        if ((data as any)?.lessonGetAll?.data?.length) {
+            const modifyOptions = (data as any)?.lessonGetAll?.data?.map((lesson: any) => ({
                 value: lesson.id,
                 label: lesson.lesson_title
             }))
             SetOptions(modifyOptions);
         }
-    }, [data?.lessonGetAll?.data])
+    }, [data])
 
     return (
         <FormSelectField
@@ -32,4 +32,4 @@ const CourseSelectFieldWithOptionsData = () => {
     )
 }
 
-export default CourseSelectFieldWithOptionsData
+export default LessonSelectField

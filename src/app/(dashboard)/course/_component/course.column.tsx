@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, message } from "antd";
 
 import { KeyEnum } from "@/common/constants";
@@ -67,9 +67,16 @@ const CourseColumnRenderer = () => {
           //   <Permission>
           <Space>
             <Button
-              key={KeyEnum.ROLE_ACCESS_UPDATE}
+              // key={KeyEnum.ROLE_ACCESS_UPDATE}
               type="primary"
               icon={<EditOutlined />}
+              style={{ background: "#4682A9" }}
+              onClick={() => router.push(`/course/edit-course/${data.id}`)}
+            />
+            <Button
+              key={KeyEnum.ROLE_ACCESS_UPDATE}
+              type="primary"
+              icon={<EyeOutlined />}
               style={{ background: "#4682A9" }}
               onClick={() => router.push(`/course/edit-course/${data.id}`)}
             />

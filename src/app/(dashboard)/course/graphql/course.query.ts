@@ -31,6 +31,30 @@ export const GET_ALL_COURSE = gql`
   }
 `;
 
+export const GET_ALL_USER = gql`
+  query userGetAll(
+    $paginationQuery: GlobalPagination!
+    $filterQuery: UserFilter!
+  ) {
+    userGetAll(paginationQuery: $paginationQuery, filterQuery: $filterQuery) {
+      message
+      status
+      pagination {
+        page
+        limit
+        total
+        totalPages
+      }
+
+      data {
+        id
+        uid
+        fullName
+      }
+    }
+  }
+`;
+
 export const GET_COURSE = gql`
   query courseGet($id: Int!) {
     courseGet(id: $id) {
@@ -48,9 +72,7 @@ export const GET_COURSE = gql`
       lesson {
         id
       }
-      author {
-        id
-      }
+      authorId
     }
   }
 `;
