@@ -42,7 +42,7 @@ const EditCarePacakge = ({ params }: { params: { id: string } }) => {
     })
 
     useEffect(() => {
-        if (singleCarePackage?.carePackageGet) {
+        if ((singleCarePackage as any)?.carePackageGet) {
             const { carePackageTime } = singleCarePackage?.carePackageGet || {};
             setDefaultValues(singleCarePackage?.carePackageGet)
             const converTimeOptions = convertDataToFormSelectOptions(carePackageTime)

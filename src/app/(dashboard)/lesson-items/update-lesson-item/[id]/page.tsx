@@ -3,7 +3,7 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { SubmitHandler } from "react-hook-form";
 import Title from "antd/es/typography/Title";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { Button, Flex, message } from "antd";
 import Card from "antd/es/card/Card";
 import Image from "next/image";
@@ -16,40 +16,65 @@ import { MODAL_ENUMS } from "@/common/constants";
 import Form from "@/components/Forms/Form";
 import { useModal } from "@/common/store";
 import { useRouter } from "next/navigation";
-import LessonItemDropdownField from "../components/lessonItemsDropdownField";
+import LessonItemDropdownField from "../../components/lessonItemsDropdownField";
 import HtmlEditor from "@/components/HtmlEditor";
-import { useState } from "react";
-import { CREATE_LESSON_ITEM } from "../graphql";
+import { useEffect, useState } from "react";
+import { GET_LESSON_ITEM, UPDATE_LESSON_ITEM } from "../../graphql";
+import { useGetSingleDataWithDynamicQuery } from "@/common/hooks";
 
-const AddLessonItem = () => {
-  const [lessonItemCreate, { loading, error }] = useMutation(CREATE_LESSON_ITEM, {
-      refetchQueries: ["lessonItemGetAll"]
-  });
-  const [editorValue, setEditorValue] = useState<string>("");
+const UpdateLessonItem = ({ params }: { params: { id: string } }) => {
+  const [lessonItemUpdate, { loading, error }] = useMutation(
+    UPDATE_LESSON_ITEM,
+    {
+      refetchQueries: ["lessonItemGetAll"],
+    }
+  );
+  const [defaultValues, setDefaultValues] = useState({});
+  const { data } = useGetSingleDataWithDynamicQuery({
+    query: GET_LESSON_ITEM,
+    variables: {
+        id: +params.id
+    }
+});
 
-  const { selectImages, resetSelectedImages } = useSelectImages();
-  const { setModal } = useModal();
-  const router = useRouter();
-  
+const [editorValue, setEditorValue] = useState<string>("");
+const { selectImages, handleSelectImages, resetSelectedImages } = useSelectImages();
+const { setModal } = useModal();
+const router = useRouter();
+
+  useEffect(() => {
+    if ((data as any)?.lessonItemGet) {
+        setDefaultValues((data as any)?.lessonItemGet)
+        setEditorValue((data as any)?.lessonItemGet.description);
+
+        (data as any)?.lessonItemGet.file?.forEach((item:any) => (
+            handleSelectImages({ id: item.id, fileUrl: item.fileUrl })
+        ))
+    }
+}, [data, handleSelectImages])
+
   const onSubmit: SubmitHandler<any> = async (data: any) => {
     data.description = editorValue;
-    data.galleryIds = selectImages.map(image => image.id);
+    data.galleryIds = selectImages.map((image) => image.id);
+    delete data.__typename
+    delete data.file
     try {
-        const res = await lessonItemCreate({
-            variables: {
-                input: data,
-            },
-        });
-        if (res.data) {
-            message.success("Lesson Item create successfully");
-            resetSelectedImages();
-            router.push("/lesson-items");
-        }
+      const res = await lessonItemUpdate({
+        variables: {
+          input: data,
+        },
+      });
+      if (res.data) {
+        message.success("Lesson Item Update successfully");
+        resetSelectedImages();
+        router.push("/lesson-items");
+      }
     } catch (err) {
-        message.error(error?.message || "Something want wrong. please try again!");
+      message.error(
+        error?.message || "Something want wrong. please try again!"
+      );
     }
   };
-
   const showSelectedImage = (
     <Flex justify="flex-start" align="center" wrap="wrap" gap={5}>
       {selectImages.length > 0 &&
@@ -77,7 +102,7 @@ const AddLessonItem = () => {
     <>
       <Card>
         <Title level={3}>Add New Lesson Item</Title>
-        <Form submitHandler={onSubmit}>
+        <Form submitHandler={onSubmit} defaultValues={defaultValues}>
           <Flex gap="large" style={{ width: "100%" }} justify="space-between">
             <Flex vertical gap="large" style={{ flexBasis: "50%" }}>
               <FormInput
@@ -87,7 +112,10 @@ const AddLessonItem = () => {
                 placeholder="Enter Your Title"
                 type="text"
               />
-              <HtmlEditor editorValue={editorValue} setEditorValue={setEditorValue} />
+              <HtmlEditor
+                editorValue={editorValue}
+                setEditorValue={setEditorValue}
+              />
             </Flex>
             <Flex vertical gap="large" style={{ flexBasis: "50%" }}>
               <FormInput
@@ -105,7 +133,11 @@ const AddLessonItem = () => {
               >
                 Select Image
               </Button>
-              {!selectImages.length && <small style={{ color: "red" }}>Please select at least a Image</small>}
+              {!selectImages.length && (
+                <small style={{ color: "red" }}>
+                  Please select at least a Image
+                </small>
+              )}
               <Button
                 loading={loading}
                 disabled={loading}
@@ -113,7 +145,7 @@ const AddLessonItem = () => {
                 htmlType="submit"
                 block
               >
-                Create Lesson Item
+                Update Lesson Item
               </Button>
             </Flex>
           </Flex>
@@ -124,4 +156,4 @@ const AddLessonItem = () => {
   );
 };
 
-export default AddLessonItem;
+export default UpdateLessonItem;

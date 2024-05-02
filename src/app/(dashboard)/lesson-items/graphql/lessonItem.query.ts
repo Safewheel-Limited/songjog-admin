@@ -5,7 +5,10 @@ export const GET_ALL_LESSON_ITEMS = gql`
     $paginationQuery: GlobalPagination!
     $filterQuery: LessonItemFilter!
   ) {
-    lessonItemGetAll(paginationQuery: $paginationQuery, filterQuery: $filterQuery) {
+    lessonItemGetAll(
+      paginationQuery: $paginationQuery
+      filterQuery: $filterQuery
+    ) {
       message
       status
       pagination {
@@ -16,12 +19,17 @@ export const GET_ALL_LESSON_ITEMS = gql`
       }
       data {
         id
-        # lessonId
         title
         description
         time
         createdAt
-        updatedAt
+        lesson {
+          lesson_title
+        }
+        file {
+          id
+          fileUrl
+        }
       }
     }
   }
@@ -30,13 +38,15 @@ export const GET_ALL_LESSON_ITEMS = gql`
 export const GET_LESSON_ITEM = gql`
   query lessonItemGet($id: Int!) {
     lessonItemGet(id: $id) {
+      id
+      lessonId
+      title
+      file {
         id
-        lessonId
-        title
-        description
-        time
-        createdAt
-        updatedAt
+        fileUrl
+      }
+      description
+      time
     }
   }
 `;
