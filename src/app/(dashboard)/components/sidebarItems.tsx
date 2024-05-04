@@ -107,6 +107,21 @@ export const sidebarItems = (role: string) => {
             ],
         },
         {
+            label: "Blog",
+            key: "blog",
+            icon: <ProfileOutlined />,
+            children: [
+                {
+                    label: <Link href="/blog">blog List</Link>,
+                    key: `blog-list`,
+                },
+                {
+                    label: <Link href="/blog/create-blog">Add New blog</Link>,
+                    key: `add-blog`,
+                },
+            ],
+        },
+        {
             label: "Lesson Items",
             key: "lesson-items",
             icon: <ProfileOutlined />,
@@ -141,6 +156,30 @@ export const sidebarItems = (role: string) => {
                 {
                     label: <Link href="/level">All Level</Link>,
                     key: `level-lists`,
+                },
+
+            ],
+        },
+        {
+            label: "Blog Category",
+            key: "blog-category",
+            icon: <ProfileOutlined />,
+            children: [
+                {
+                    label: <Link href="/blog-category">All Blog Categories</Link>,
+                    key: `blog-category-lists`,
+                },
+
+            ],
+        },
+        {
+            label: "Enrollment",
+            key: "enrollment",
+            icon: <ProfileOutlined />,
+            children: [
+                {
+                    label: <Link href="/enrollment">All Enrollment</Link>,
+                    key: `enrollment-lists`,
                 },
 
             ],

@@ -29,4 +29,7 @@ export enum MODAL_ENUMS {
 
   // single view modal;
   OPEN_LESSON_ITEM_VIEW_MODAL = "open_lesson_item_view_modal",
+  
+  OPEN_ADD_BLOG_CATEGORY_MODAL = "open_add_blog_category_modal",
+  OPEN_UPDATE_BLOG_CATEGORY_MODAL = "open_update_blog_category_modal",
 }

@@ -8,7 +8,6 @@ import { Button, Flex, message } from "antd";
 import Card from "antd/es/card/Card";
 import Image from "next/image";
 
-
 import GalleryModal from "@/app/(dashboard)/gallery/components/gallery.modal";
 import { ImageType, useSelectImages } from "@/app/(dashboard)/gallery/store";
 
@@ -16,45 +15,51 @@ import FormTextArea from "@/components/Forms/FormTextArea";
 
 import FormInput from "@/components/Forms/FormInput";
 import { MODAL_ENUMS } from "@/common/constants";
-import Form from "@/components/Forms/Form";
+
 import { useModal } from "@/common/store";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CreateCourseFormValues } from "../types";
-import { CREATE_COURSE } from "../graphql";
-import LessonSelectField from "../_component/lessonSelectField";
-import { courseCreateSchema } from "../validation";
-import UserSelectField from "../_component/userSelect.Field";
+import { CREATE_BLOG } from "../graphql";
+import { BlogInputSchema } from "../validation";
+import BlogCategoryField from "../components/BlogCategoryIdField";
+import FormCheckbox from "@/components/Forms/FormCheckBox";
+import Form from "@/components/Forms/Form";
+import { useEffect, useState } from "react";
+import HtmlEditor from "@/components/HtmlEditor";
 
-const AddCourse = () => {
-    const [courseCreate, { loading, error }] = useMutation(CREATE_COURSE, {
-        refetchQueries: ["courseGetAll"]
+
+const AddBlog = () => {
+    const [blogCreate, { loading, error }] = useMutation(CREATE_BLOG, {
+        refetchQueries: ["blogGetAll", "blogGet"]
     });
     const { selectImages, resetSelectedImages } = useSelectImages();
+    const [editorValue, setEditorValue] = useState<string>("");
     const { setModal } = useModal();
     const router = useRouter();
     const onSubmit: SubmitHandler<any> = async (
         data: any
     ) => {
-        // console.log("data", data);
-        data.thumbnailsIds = selectImages.map(image => image.id);
-        data.price = Number(data.price);
-        data.levelId = Number(data.levelId);
+        data.details = editorValue;
+        data.thumbnailIds = selectImages.map(image => image.id);
         try {
-            const res = await courseCreate({
+            const res = await blogCreate({
                 variables: {
                     input: data,
                 },
             });
             if (res.data) {
-                message.success("Course created successfully");
+                message.success("blog created successfully");
                 resetSelectedImages();
-                router.push("/course");
+                router.push("/blog");
             }
         } catch (err) {
             message.error(error?.message || "Something want wrong. please try again!");
         }
     };
+
+    useEffect(() => {
+        resetSelectedImages();
+    }, [])
 
     const showSelectedImage = (
         <Flex justify="flex-start" align="center" wrap="wrap" gap={5}>
@@ -78,13 +83,11 @@ const AddCourse = () => {
                 ))}
         </Flex>
     );
-
-
     return (
         <>
             <Card>
-                <Title level={3}>Add New Course</Title>
-                <Form submitHandler={onSubmit} resolver={yupResolver(courseCreateSchema)}>
+                <Title level={3}>Add New Blog</Title>
+                <Form submitHandler={onSubmit} resolver={yupResolver(BlogInputSchema)}>
                     <Flex gap="large" style={{ width: "100%" }} justify="space-between">
                         <Flex vertical gap="large" style={{ flexBasis: "50%" }}>
                             <FormInput
@@ -94,42 +97,23 @@ const AddCourse = () => {
                                 placeholder="Enter Your Title"
                                 type="text"
                             />
-                            <FormTextArea
-                                name="description"
-                                label="Write Description"
-                                placeholder="Write your package description"
+                            {/* <FormTextArea
+                                name="details"
+                                label="Write details"
+                                placeholder="Write your blog details"
                                 rows={5}
-                            />
-                            <FormInput
-                                name="about_course"
-                                label="Write About Course"
-                                placeholder="Write about your course"
-                            />
-
-                            <FormInput
-                                name="levelId"
-                                label="Level"
-                                placeholder="Write your level"
-                                type="number"
-                            />
+                            /> */}
+                            <HtmlEditor editorValue={editorValue} setEditorValue={setEditorValue} />
                         </Flex>
                         <Flex vertical gap="large" style={{ flexBasis: "50%" }}>
                             <FormInput
-                                name="price"
-                                label="Price"
-                                placeholder="Write your Price"
-                                type="number"
-                                required
+                                name="readTime"
+                                label="Read Time"
+                                placeholder="Write about read time"
                             />
-                            <FormInput
-                                name="course_time"
-                                label="Course Time"
-                                placeholder="Write course time"
-                                required
-                            />
+                            <BlogCategoryField />
 
-                            <UserSelectField />
-                            <LessonSelectField />
+                            <FormCheckbox label="IsActive" defaultValue={true} name="isActive" />
                             {showSelectedImage}
                             <Button
                                 type="default"
@@ -146,7 +130,7 @@ const AddCourse = () => {
                                 htmlType="submit"
                                 block
                             >
-                                Create Course
+                                Create Blog
                             </Button>
                         </Flex>
                     </Flex>
@@ -157,4 +141,5 @@ const AddCourse = () => {
     );
 };
 
-export default AddCourse;
+export default AddBlog;
+

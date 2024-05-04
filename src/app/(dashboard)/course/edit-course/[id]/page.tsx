@@ -21,9 +21,10 @@ import { useRouter } from "next/navigation";
 import { CreateCourseFormValues } from "../../types";
 import { GET_COURSE, UPDATE_COURSE } from "../../graphql";
 import { useEffect, useState } from "react";
-import CourseSelectFieldWithOptionsData from "../../_component/CourseSelectFieldWithOptionsData";
+import LessonSelectField from "../../_component/lessonSelectField";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { courseUpdateSchema } from "../../validation";
+import UserSelectField from "../../_component/userSelect.Field";
 
 const EditCourse = ({ params }: { params: { id: string } }) => {
 
@@ -42,10 +43,10 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
 
     useEffect(() => {
         if (singleCourse) {
-            const { title, about_course, course_time, thumbnails, levelId, price, description, lesson } = singleCourse?.courseGet;
+            const { title, about_course, course_time, thumbnails, levelId, price, description, lesson, authorId } = (singleCourse as any)?.courseGet || {};
             const modifyLesson = lesson?.map((lsn: { id: number }) => lsn.id);
             setDefaultValues({
-                title, about_course, course_time, thumbnailsIds: thumbnails, levelId, price, description, lessonIds: modifyLesson
+                title, about_course, course_time, thumbnailsIds: thumbnails, levelId, price, description, lessonIds: modifyLesson, authorId
             });
 
             thumbnails.forEach((item: any) => (
@@ -67,9 +68,6 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
         data.thumbnailsIds = selectImages.map(image => image.id);
         data.price = Number(data.price);
         data.levelId = Number(data.levelId);
-        data.authorId = "f5d89311-153f-47aa-976b-0b2313e45823";
-
-        console.log("data", data);
 
         try {
             const res = await updateCourse({
@@ -157,8 +155,9 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
                                 placeholder="Write course time"
                                 required
                             />
+                            <UserSelectField />
 
-                            <CourseSelectFieldWithOptionsData />
+                            <LessonSelectField />
                             {showSelectedImage}
                             <Button
                                 type="default"

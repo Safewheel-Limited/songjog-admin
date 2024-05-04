@@ -59,7 +59,7 @@ const ReviewAddModal = () => {
         <Flex vertical gap="large">
           <FormSelectField
             name="courseId"
-            options={convertDataToFormSelectOptions(courses?.courseGetAll?.data)}
+            options={convertDataToFormSelectOptions((courses as any)?.courseGetAll?.data)}
             placeholder="Select Course"
             label="Select Course"
             required
