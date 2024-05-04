@@ -39,14 +39,17 @@ export const GET_LESSON_ITEM = gql`
   query lessonItemGet($id: Int!) {
     lessonItemGet(id: $id) {
       id
-      lessonId
       title
+      description
+      time
+      createdAt
+      lesson {
+        lesson_title
+      }
       file {
         id
         fileUrl
       }
-      description
-      time
     }
   }
 `;

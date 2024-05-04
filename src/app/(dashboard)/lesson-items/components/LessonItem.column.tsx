@@ -1,17 +1,21 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, message } from "antd";
 
-import { KeyEnum } from "@/common/constants";
+import { KeyEnum, MODAL_ENUMS } from "@/common/constants";
 import { useMutation } from "@apollo/client";
 import { DELETE_LESSON_ITEM } from "../graphql";
 import { useRouter } from "next/navigation";
+import { useModal } from "@/common/store";
+import { useSaveLessonItemId } from "../store";
 
 const LessonItemColumnRender = () => {
+  const { setModal } = useModal();
+  const { setLessonItemId } = useSaveLessonItemId();
   const [deleteLessonItem, { loading }] = useMutation(DELETE_LESSON_ITEM, {
     refetchQueries: ["lessonItemGetAll"],
   });
   const router = useRouter();
-  const handleDeleteLesson = (id: string | number) => {
+  const handleDeleteLessonItem = (id: string | number) => {
     deleteLessonItem({
       variables: {
         id: Number(id),
@@ -27,8 +31,13 @@ const LessonItemColumnRender = () => {
       });
   };
 
-  const handleUpdateLesson = (id: number | string) => {
+  const handleUpdateLessonItem = (id: number | string) => {
     router.push(`/lesson-items/update-lesson-item/${id}`)
+  };
+
+  const handleViewLessonItem = (id: number | string) => {
+    setLessonItemId(+id);
+    setModal(MODAL_ENUMS.OPEN_LESSON_ITEM_VIEW_MODAL)
   };
 
   const columns = [
@@ -62,19 +71,26 @@ const LessonItemColumnRender = () => {
       // width: 120,
       render: (_: any, data: any) => {
         return (
-          //   <Permission>
+          //<Permission>
           <Space>
             <Button
               key={KeyEnum.ROLE_ACCESS_UPDATE}
               type="primary"
               icon={<EditOutlined />}
               style={{ background: "#4682A9" }}
-              onClick={() => handleUpdateLesson(data.id)}
+              onClick={() => handleUpdateLessonItem(data.id)}
+            />
+            <Button
+              //  key={"KeyEnum"}
+              type="primary"
+              icon={<EyeOutlined />}
+              style={{ background: "#4682A9" }}
+              onClick={() => handleViewLessonItem(data.id)}
             />
             <Popconfirm
               title="Are you sure ?"
               description="Are you sure to delete this Role"
-              onConfirm={() => handleDeleteLesson(data.id)}
+              onConfirm={() => handleDeleteLessonItem(data.id)}
               okText="Yes"
               cancelText="No"
               disabled={loading}

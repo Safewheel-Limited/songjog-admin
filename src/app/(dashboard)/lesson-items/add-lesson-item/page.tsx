@@ -18,35 +18,38 @@ import { useModal } from "@/common/store";
 import { useRouter } from "next/navigation";
 import LessonItemDropdownField from "../components/lessonItemsDropdownField";
 import HtmlEditor from "@/components/HtmlEditor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CREATE_LESSON_ITEM } from "../graphql";
 
 const AddLessonItem = () => {
   const [lessonItemCreate, { loading, error }] = useMutation(CREATE_LESSON_ITEM, {
-      refetchQueries: ["lessonItemGetAll"]
+    refetchQueries: ["lessonItemGetAll"]
   });
   const [editorValue, setEditorValue] = useState<string>("");
 
   const { selectImages, resetSelectedImages } = useSelectImages();
   const { setModal } = useModal();
   const router = useRouter();
-  
+
+  useEffect(() => {
+    resetSelectedImages();
+  }, [])
   const onSubmit: SubmitHandler<any> = async (data: any) => {
     data.description = editorValue;
     data.galleryIds = selectImages.map(image => image.id);
     try {
-        const res = await lessonItemCreate({
-            variables: {
-                input: data,
-            },
-        });
-        if (res.data) {
-            message.success("Lesson Item create successfully");
-            resetSelectedImages();
-            router.push("/lesson-items");
-        }
+      const res = await lessonItemCreate({
+        variables: {
+          input: data,
+        },
+      });
+      if (res.data) {
+        message.success("Lesson Item create successfully");
+        resetSelectedImages();
+        router.push("/lesson-items");
+      }
     } catch (err) {
-        message.error(error?.message || "Something want wrong. please try again!");
+      message.error(error?.message || "Something want wrong. please try again!");
     }
   };
 

@@ -3,7 +3,7 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { SubmitHandler } from "react-hook-form";
 import Title from "antd/es/typography/Title";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { Button, Flex, message } from "antd";
 import Card from "antd/es/card/Card";
 import Image from "next/image";
@@ -33,25 +33,29 @@ const UpdateLessonItem = ({ params }: { params: { id: string } }) => {
   const { data } = useGetSingleDataWithDynamicQuery({
     query: GET_LESSON_ITEM,
     variables: {
-        id: +params.id
+      id: +params.id
     }
-});
+  });
 
-const [editorValue, setEditorValue] = useState<string>("");
-const { selectImages, handleSelectImages, resetSelectedImages } = useSelectImages();
-const { setModal } = useModal();
-const router = useRouter();
+  const [editorValue, setEditorValue] = useState<string>("");
+  const { selectImages, handleSelectImages, resetSelectedImages } = useSelectImages();
+  const { setModal } = useModal();
+  const router = useRouter();
 
   useEffect(() => {
     if ((data as any)?.lessonItemGet) {
-        setDefaultValues((data as any)?.lessonItemGet)
-        setEditorValue((data as any)?.lessonItemGet.description);
+      setDefaultValues((data as any)?.lessonItemGet)
+      setEditorValue((data as any)?.lessonItemGet.description);
 
-        (data as any)?.lessonItemGet.file?.forEach((item:any) => (
-            handleSelectImages({ id: item.id, fileUrl: item.fileUrl })
-        ))
+      (data as any)?.lessonItemGet.file?.forEach((item: any) => (
+        handleSelectImages({ id: item.id, fileUrl: item.fileUrl })
+      ))
     }
-}, [data, handleSelectImages])
+  }, [data, handleSelectImages])
+
+  useEffect(() => {
+    resetSelectedImages();
+  }, [])
 
   const onSubmit: SubmitHandler<any> = async (data: any) => {
     data.description = editorValue;
