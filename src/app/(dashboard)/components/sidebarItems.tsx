@@ -1,7 +1,16 @@
 import type { MenuProps } from "antd";
-import {
-    ProfileOutlined,
-} from "@ant-design/icons";
+import { FaUserCircle } from "react-icons/fa";
+import { FaUsersCog } from "react-icons/fa";
+import { BiSolidPackage } from "react-icons/bi";
+import { GrGallery } from "react-icons/gr";
+import { FaBook } from "react-icons/fa";
+import { BiSolidVideos } from "react-icons/bi";
+import { BsFileTextFill } from "react-icons/bs";
+import { BsTicketPerforated } from "react-icons/bs";
+import { IoBookmarks } from "react-icons/io5";
+
+
+
 import Link from "next/link";
 
 export const sidebarItems = (role: string) => {
@@ -9,7 +18,7 @@ export const sidebarItems = (role: string) => {
         {
             label: "Profile",
             key: "profile",
-            icon: <ProfileOutlined />,
+            icon: <FaUserCircle />,
             children: [
                 {
                     label: <Link href={`/${role}`}>Account Profile</Link>,
@@ -24,7 +33,7 @@ export const sidebarItems = (role: string) => {
         {
             label: "Role management",
             key: "role-management",
-            icon: <ProfileOutlined />,
+            icon: <FaUsersCog />,
             children: [
                 {
                     label: <Link href="/administrators">Administrators</Link>,
@@ -47,7 +56,7 @@ export const sidebarItems = (role: string) => {
         {
             label: "Care Package",
             key: "care-package",
-            icon: <ProfileOutlined />,
+            icon: <BiSolidPackage />,
             children: [
                 {
                     label: <Link href="/care-package/add-care-package">Add Care Package </Link>,
@@ -71,7 +80,7 @@ export const sidebarItems = (role: string) => {
         {
             label: "Gallery",
             key: "gallery",
-            icon: <ProfileOutlined />,
+            icon: <GrGallery />,
             children: [
                 {
                     label: <Link href="/gallery">All Gallery</Link>,
@@ -82,50 +91,12 @@ export const sidebarItems = (role: string) => {
         {
             label: "Lessons",
             key: "lessons",
-            icon: <ProfileOutlined />,
+            icon: <FaBook />,
             children: [
                 {
                     label: <Link href="/lesson">All Lessons</Link>,
                     key: `lesson-lists`,
                 },
-
-            ],
-        },
-        {
-            label: "Course",
-            key: "course",
-            icon: <ProfileOutlined />,
-            children: [
-                {
-                    label: <Link href="/course">Course List</Link>,
-                    key: `course-list`,
-                },
-                {
-                    label: <Link href="/course/add-course">Add New Course</Link>,
-                    key: `add-course`,
-                },
-            ],
-        },
-        {
-            label: "Blog",
-            key: "blog",
-            icon: <ProfileOutlined />,
-            children: [
-                {
-                    label: <Link href="/blog">blog List</Link>,
-                    key: `blog-list`,
-                },
-                {
-                    label: <Link href="/blog/create-blog">Add New blog</Link>,
-                    key: `add-blog`,
-                },
-            ],
-        },
-        {
-            label: "Lesson Items",
-            key: "lesson-items",
-            icon: <ProfileOutlined />,
-            children: [
                 {
                     label: <Link href="/lesson-items">Lesson Items List</Link>,
                     key: `lesson-items-list`,
@@ -137,54 +108,69 @@ export const sidebarItems = (role: string) => {
             ],
         },
         {
-            label: "Review",
-            key: "Review",
-            icon: <ProfileOutlined />,
+            label: "Course",
+            key: "course",
+            icon: <BiSolidVideos />,
             children: [
+                {
+                    label: <Link href="/course">Course List</Link>,
+                    key: `course-list`,
+                },
+                {
+                    label: <Link href="/course/add-course">Add New Course</Link>,
+                    key: `add-course`,
+                },
                 {
                     label: <Link href="/review">All Reviews</Link>,
                     key: `review-lists`,
                 },
-
+                {
+                    label: <Link href="/enrollment">All Enrollment</Link>,
+                    key: `enrollment-lists`,
+                },
+            ],
+        },
+        {
+            label: "Blog",
+            key: "blog",
+            icon: <BsFileTextFill />,
+            children: [
+                {
+                    label: <Link href="/blog">Blog List</Link>,
+                    key: `blog-list`,
+                },
+                {
+                    label: <Link href="/blog/create-blog">Add New blog</Link>,
+                    key: `add-blog`,
+                },
+                {
+                    label: <Link href="/blog-category">All Blog Categories</Link>,
+                    key: `blog-category-lists`,
+                },
             ],
         },
         {
             label: "Level",
             key: "Level",
-            icon: <ProfileOutlined />,
+            icon: <BsTicketPerforated />,
             children: [
                 {
                     label: <Link href="/level">All Level</Link>,
                     key: `level-lists`,
                 },
-
             ],
         },
         {
-            label: "Blog Category",
-            key: "blog-category",
-            icon: <ProfileOutlined />,
+            label: "Booking",
+            key: "booking",
+            icon: <IoBookmarks />,
             children: [
                 {
-                    label: <Link href="/blog-category">All Blog Categories</Link>,
-                    key: `blog-category-lists`,
+                    label: <Link href="/booking">All Booking List</Link>,
+                    key: `booking-lists`,
                 },
-
             ],
         },
-        {
-            label: "Enrollment",
-            key: "enrollment",
-            icon: <ProfileOutlined />,
-            children: [
-                {
-                    label: <Link href="/enrollment">All Enrollment</Link>,
-                    key: `enrollment-lists`,
-                },
-
-            ],
-        },
-
     ];
 
     return defaultSidebarItems;
