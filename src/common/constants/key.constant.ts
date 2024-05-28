@@ -4,6 +4,7 @@ export enum KeyEnum {
 
   ASSIGN_ROLE_TO_USER = "assignRoleToUser",
   UN_ASSIGN_ROLE_TO_USER = "unAssignRoleToUser",
+  ROLE_ACCESS_VIEW_ALL = "roleAccessViewAll",
   ROLE_ACCESS_CREATE = "roleAccessCreate",
   ROLE_ACCESS_UPDATE = "roleAccessUpdate",
   ROLE_ACCESS_DELETE = "roleAccessDelete",
